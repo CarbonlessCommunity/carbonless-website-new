@@ -1,8 +1,9 @@
+import { asset } from '@/lib/asset'
 import SolutionPage from '@/components/SolutionPage'
 
 export default function XLHybrids() {
   return (
-    <SolutionPage slug="xl-hybrids" heroImage="/images/XLlogo.png">
+    <SolutionPage slug="xl-hybrids" heroImage={asset('/images/XLlogo.png')}>
       <div className="rich-text">
         <p>
           A hybrid conversion is a cutting-edge technology designed to transform your existing
@@ -36,7 +37,7 @@ export default function XLHybrids() {
       </div>
 
       <img
-        src="/images/XLPage.jpg"
+        src={asset('/images/XLPage.jpg')}
         alt="XL Hybrids conversion overview"
         className="mt-12 w-full rounded-2xl border border-[var(--line)] bg-white"
         loading="lazy"

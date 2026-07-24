@@ -1,8 +1,9 @@
+import { asset } from '@/lib/asset'
 import SolutionPage from '@/components/SolutionPage'
 
 export default function EnerFusion() {
   return (
-    <SolutionPage slug="enerfusion" heroImage="/images/enerfusion company logo 14d.png">
+    <SolutionPage slug="enerfusion" heroImage={asset('/images/enerfusion company logo 14d.png')}>
       <div className="rich-text">
         <p>
           EnerFusion Inc. is a provider of solar PV charging tables that provide not only meeting
@@ -31,7 +32,7 @@ export default function EnerFusion() {
       </p>
 
       <img
-        src="/images/orion.jpg"
+        src={asset('/images/orion.jpg')}
         alt="An EnerFusion solar PV charging table"
         className="mt-12 w-full rounded-2xl border border-[var(--line)] object-cover"
         loading="lazy"

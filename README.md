@@ -84,14 +84,34 @@ authored in WordPress.
 
 ## Deploying
 
-The build is a static directory, so GitHub Pages works the way the old site did. Two things the
-old site didn't need:
+`.github/workflows/deploy.yml` builds on every push to `main` and publishes `dist/` to GitHub
+Pages. Pages must be set to **Source: GitHub Actions** — a branch source would serve this
+directory, which is now source code rather than the site.
+
+Two files the old site didn't need:
 
 - `404.html` — GitHub Pages has no rewrite rules, so a deep link like `/solutions/enerfusion`
   would 404 on refresh. `npm run build` copies `index.html` over it, which hands the URL back to
   React Router.
 - `.nojekyll` — stops Pages from processing the build output.
 
-`public/CNAME` carries `www.carbonlesscommunity.com` over from the old repo. Publish the contents
-of `dist/` to the Pages branch; don't point Pages at the repo root, since the source is no longer
-the site.
+### Base path
+
+Pages serves the repo from `/carbonless-website-new/`, so the build needs a matching `base`.
+Vite rewrites the asset URLs it owns, but not strings like `'/images/Logo.png'` — those go
+through `asset()` in `src/lib/asset.ts`, which prefixes `import.meta.env.BASE_URL`. **Use it for
+anything in `public/`.** `BrowserRouter` gets the same value as its `basename`.
+
+### Cutting over to www.carbonlesscommunity.com
+
+The domain still points at the old site's repo, so this one deliberately ships without a `CNAME`
+— publishing one would take the domain over the moment the workflow ran. The stored value sits in
+`CNAME.disabled` at the repo root. To cut over:
+
+```bash
+git mv CNAME.disabled public/CNAME
+```
+
+The workflow keys off that file: present means the site answers at a domain root, so it builds
+with `base: '/'` instead of the subpath. Push, then remove the domain from the old repo's Pages
+settings and add it to this one.

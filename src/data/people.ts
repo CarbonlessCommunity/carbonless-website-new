@@ -1,3 +1,5 @@
+import { asset } from '@/lib/asset'
+
 export type Person = {
   name: string
   role: string
@@ -10,7 +12,7 @@ export const people: Person[] = [
   {
     name: 'Craig Schuttenberg, PE MBA',
     role: 'CEO, Carbonless Community',
-    image: '/images/craig2.jpg',
+    image: asset('/images/craig2.jpg'),
     current: true,
     bullets: [
       'Director of Energy Planning at the University of Chicago',
@@ -24,7 +26,7 @@ export const people: Person[] = [
   {
     name: 'Jeffrey Huang',
     role: 'Chief Technology Officer',
-    image: '/images/Jeffrey.jpeg',
+    image: asset('/images/Jeffrey.jpeg'),
     current: true,
     bullets: [
       'University of Chicago Laboratory Schools',
@@ -36,14 +38,14 @@ export const people: Person[] = [
   {
     name: 'Adam Tang',
     role: 'Director of IT Operations',
-    image: '/images/Adam.jpg',
+    image: asset('/images/Adam.jpg'),
     current: true,
     bullets: ['University of Chicago Laboratory Schools'],
   },
   {
     name: 'Roma Bhattacharjee',
     role: 'Former Chief Technology Officer',
-    image: '/images/Roma2.jpeg',
+    image: asset('/images/Roma2.jpeg'),
     current: false,
     bullets: [
       'University of Chicago Laboratory Schools',
@@ -56,7 +58,7 @@ export const people: Person[] = [
   {
     name: 'Benjamin Cifu',
     role: 'Former Chief Technology Officer',
-    image: '/images/Ben.jpg',
+    image: asset('/images/Ben.jpg'),
     current: false,
     bullets: [
       'University of Chicago Laboratory Schools',
@@ -68,7 +70,7 @@ export const people: Person[] = [
   {
     name: 'Campbell Phalen',
     role: 'Former Chief Technology Officer',
-    image: '/images/Campbell.jpg',
+    image: asset('/images/Campbell.jpg'),
     current: false,
     bullets: [
       'University of Chicago Laboratory Schools',
@@ -81,7 +83,7 @@ export const people: Person[] = [
   {
     name: 'Harrison Shapiro',
     role: 'Former Chief Technology Officer',
-    image: '/images/harrison2.jpg',
+    image: asset('/images/harrison2.jpg'),
     current: false,
     bullets: [
       'Trained at the University of Chicago Laboratory Schools',
@@ -92,7 +94,7 @@ export const people: Person[] = [
   {
     name: 'Jeremy Archer',
     role: 'Former Chief Technology Officer',
-    image: '/images/blank_person.png',
+    image: asset('/images/blank_person.png'),
     current: false,
     bullets: [
       'Trained at the University of Chicago',
@@ -105,7 +107,7 @@ export const people: Person[] = [
   {
     name: 'Jonathan Lipman',
     role: 'Former Chief Technology Officer',
-    image: '/images/jonathan.jpg',
+    image: asset('/images/jonathan.jpg'),
     current: false,
     bullets: [
       'Trained at Stanford University',

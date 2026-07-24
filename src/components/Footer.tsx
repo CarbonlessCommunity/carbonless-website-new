@@ -1,3 +1,4 @@
+import { asset } from '@/lib/asset'
 import { Link } from 'react-router-dom'
 import { contacts, nav, site } from '@/data/site'
 import { Container } from './ui'
@@ -12,7 +13,7 @@ export default function Footer() {
         <div className="grid gap-12 py-16 lg:grid-cols-[1.4fr_2fr] lg:gap-16">
           <div>
             <Link to="/" className="flex items-center gap-2.5">
-              <img src="/images/Logo.png" alt="" className="h-10 w-10 object-contain" />
+              <img src={asset('/images/Logo.png')} alt="" className="h-10 w-10 object-contain" />
               <span className="font-display text-lg font-semibold text-[var(--ink)]">
                 Carbonless Community
               </span>

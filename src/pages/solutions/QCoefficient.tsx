@@ -1,8 +1,9 @@
+import { asset } from '@/lib/asset'
 import SolutionPage from '@/components/SolutionPage'
 
 export default function QCoefficient() {
   return (
-    <SolutionPage slug="qcoefficient" heroImage="/images/qlogoBlue.png">
+    <SolutionPage slug="qcoefficient" heroImage={asset('/images/qlogoBlue.png')}>
       <div className="rich-text">
         <p>
           Contracts from renewable generators don’t typically guarantee or specify{' '}

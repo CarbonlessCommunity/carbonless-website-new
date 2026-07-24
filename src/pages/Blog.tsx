@@ -1,3 +1,4 @@
+import { asset } from '@/lib/asset'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageHeader from '@/components/PageHeader'
@@ -110,7 +111,7 @@ export default function Blog() {
                       />
                     ) : (
                       <img
-                        src="/images/image6.jpg"
+                        src={asset('/images/image6.jpg')}
                         alt=""
                         className="h-full w-full object-cover opacity-70 transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-105"
                       />

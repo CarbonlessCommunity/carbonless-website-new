@@ -1,3 +1,4 @@
+import { asset } from '@/lib/asset'
 import SolutionPage from '@/components/SolutionPage'
 
 const advantages = [
@@ -8,7 +9,7 @@ const advantages = [
 
 export default function CommunitySolar() {
   return (
-    <SolutionPage slug="community-solar" heroImage="/images/nexamp_logo.jpeg">
+    <SolutionPage slug="community-solar" heroImage={asset('/images/nexamp_logo.jpeg')}>
       <div className="rich-text">
         <p>
           Every so often, we come across an <strong>energy-related opportunity</strong> for our
@@ -99,13 +100,13 @@ export default function CommunitySolar() {
 
       <div className="mt-12 grid gap-4 sm:grid-cols-2">
         <img
-          src="/images/Nexamp_1.jpeg"
+          src={asset('/images/Nexamp_1.jpeg')}
           alt="Nexamp community solar"
           className="w-full rounded-2xl border border-[var(--line)] object-cover"
           loading="lazy"
         />
         <img
-          src="/images/Nexamp_2.jpeg"
+          src={asset('/images/Nexamp_2.jpeg')}
           alt="Nexamp community solar"
           className="w-full rounded-2xl border border-[var(--line)] object-cover"
           loading="lazy"

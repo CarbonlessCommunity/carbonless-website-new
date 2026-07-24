@@ -1,3 +1,4 @@
+import { asset } from '@/lib/asset'
 import { Link } from 'react-router-dom'
 import { Arrow, Button, Container, Eyebrow, Quote, Reveal, Section } from '@/components/ui'
 import { solutions } from '@/data/solutions'
@@ -5,9 +6,9 @@ import { site } from '@/data/site'
 import { usePageMeta } from '@/lib/hooks'
 
 const heroSlides = [
-  { image: '/images/reserve1-10.jpg' },
-  { image: '/images/image6.jpg' },
-  { image: '/images/image5.jpg' },
+  { image: asset('/images/reserve1-10.jpg') },
+  { image: asset('/images/image6.jpg') },
+  { image: asset('/images/image5.jpg') },
 ]
 
 function Hero() {
@@ -213,7 +214,7 @@ export default function Home() {
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <Reveal>
               <img
-                src="/images/seals.jpg"
+                src={asset('/images/seals.jpg')}
                 alt="Seals resting on a shoreline"
                 className="w-full rounded-3xl object-cover shadow-xl shadow-forest-950/10"
                 loading="lazy"

@@ -1,8 +1,9 @@
+import { asset } from '@/lib/asset'
 import SolutionPage from '@/components/SolutionPage'
 
 export default function EfficientCars() {
   return (
-    <SolutionPage slug="efficient-cars" heroImage="/images/go-green-transportation-car.jpg">
+    <SolutionPage slug="efficient-cars" heroImage={asset('/images/go-green-transportation-car.jpg')}>
       <div className="rich-text">
         <p>
           We know there are a lot of considerations that go into buying a car — why not buy one that

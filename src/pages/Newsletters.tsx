@@ -1,8 +1,9 @@
+import { asset } from '@/lib/asset'
 import PageHeader from '@/components/PageHeader'
 import { Container, Reveal, Section } from '@/components/ui'
 import { usePageMeta } from '@/lib/hooks'
 
-const newsletters = [{ label: 'October 2020', file: '/oct2020.pdf', current: true }]
+const newsletters = [{ label: 'October 2020', file: asset('/oct2020.pdf'), current: true }]
 
 export default function Newsletters() {
   usePageMeta('Newsletters', 'Periodic updates from the Carbonless Community team.')
