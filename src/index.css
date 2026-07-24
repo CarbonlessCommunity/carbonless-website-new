@@ -1,0 +1,221 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+
+  /* Forest — the primary brand ramp */
+  --color-forest-50: #f0f7f3;
+  --color-forest-100: #dbeee2;
+  --color-forest-200: #b9ddc8;
+  --color-forest-300: #8bc4a5;
+  --color-forest-400: #57a47e;
+  --color-forest-500: #358662;
+  --color-forest-600: #256b4e;
+  --color-forest-700: #1d5540;
+  --color-forest-800: #194434;
+  --color-forest-900: #16382c;
+  --color-forest-950: #0a1f18;
+
+  /* Sand — warm neutral accent */
+  --color-sand-50: #faf8f2;
+  --color-sand-100: #f3eede;
+  --color-sand-200: #e7dcbe;
+  --color-sand-300: #d8c496;
+  --color-sand-400: #c9a86d;
+  --color-sand-500: #bd9151;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  :root {
+    --surface: #ffffff;
+    --surface-alt: var(--color-forest-50);
+    --ink: var(--color-forest-950);
+    --ink-muted: #4a5f56;
+    --line: #dfe7e2;
+  }
+
+  .dark {
+    --surface: #0b1713;
+    --surface-alt: #11201a;
+    --ink: #eaf2ed;
+    --ink-muted: #9fb3a9;
+    --line: #1e3229;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--surface);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-forest-500);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-forest-200);
+    color: var(--color-forest-950);
+  }
+
+  .dark ::selection {
+    background-color: var(--color-forest-700);
+    color: var(--color-forest-50);
+  }
+}
+
+@layer components {
+  /* Shared prose treatment for ported long-form copy */
+  .rich-text {
+    color: var(--ink-muted);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .rich-text > * + * {
+    margin-top: 1.15em;
+  }
+
+  .rich-text strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .rich-text a {
+    color: var(--color-forest-600);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    transition: color 150ms;
+  }
+
+  .dark .rich-text a {
+    color: var(--color-forest-300);
+  }
+
+  .rich-text a:hover {
+    color: var(--color-forest-800);
+  }
+
+  .dark .rich-text a:hover {
+    color: var(--color-forest-200);
+  }
+
+  .rich-text ul,
+  .rich-text ol {
+    padding-left: 1.4em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  .rich-text ul {
+    list-style: disc;
+  }
+
+  .rich-text ol {
+    list-style: decimal;
+  }
+
+  .rich-text h2 {
+    color: var(--ink);
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-top: 1.8em;
+  }
+
+  .rich-text h3 {
+    color: var(--ink);
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.6em;
+  }
+
+  .rich-text img {
+    border-radius: 0.9rem;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .rich-text blockquote {
+    border-left: 3px solid var(--color-forest-400);
+    padding-left: 1.25rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  .rich-text figcaption {
+    font-size: 0.875rem;
+    opacity: 0.75;
+  }
+}
+
+/* Entrance animation used by the Reveal component.
+   Content is visible by default — the animation is layered on top only where
+   scroll-driven timelines exist, so a stalled observer or an unsupported engine
+   can never leave a section permanently blank. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal-in {
+  animation: rise 0.7s var(--ease-out-soft) both;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: rise linear both;
+      animation-timeline: view();
+      /* --reveal-shift staggers siblings without a JS timer */
+      animation-range: entry 0% cover calc(20% + var(--reveal-shift, 0%));
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
