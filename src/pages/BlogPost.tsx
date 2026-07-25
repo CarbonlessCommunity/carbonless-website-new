@@ -4,11 +4,17 @@ import { Arrow, Button, Container, Reveal, Section } from '@/components/ui'
 import { fetchPost, formatDate, readingTime, type Post } from '@/lib/wordpress'
 import { site } from '@/data/site'
 import { usePageMeta } from '@/lib/hooks'
+import { getPrerenderData } from '@/lib/prerenderData'
 
 export default function BlogPost() {
   const { slug = '' } = useParams()
-  const [post, setPost] = useState<Post | null>(null)
-  const [status, setStatus] = useState<'loading' | 'ready' | 'missing' | 'error'>('loading')
+  // Populated during the build-time prerender; empty in the browser, where the
+  // effect below fetches as usual.
+  const prerendered = getPrerenderData().post
+  const [post, setPost] = useState<Post | null>(prerendered ?? null)
+  const [status, setStatus] = useState<'loading' | 'ready' | 'missing' | 'error'>(
+    prerendered ? 'ready' : 'loading',
+  )
 
   usePageMeta(post?.title ?? 'Blog', post?.excerpt)
 

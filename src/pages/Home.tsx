@@ -1,15 +1,19 @@
 import { asset } from '@/lib/asset'
 import { Link } from 'react-router-dom'
+import StatsStrip from '@/components/StatsStrip'
 import { Arrow, Button, Container, Eyebrow, Quote, Reveal, Section } from '@/components/ui'
 import { solutions } from '@/data/solutions'
 import { site } from '@/data/site'
 import { usePageMeta } from '@/lib/hooks'
 
+/** Each still ships at two widths; `srcSet` keeps phones off the 1920 file. */
 const heroSlides = [
-  { image: asset('/images/reserve1-10.jpg') },
-  { image: asset('/images/image6.jpg') },
-  { image: asset('/images/image5.jpg') },
+  { image: asset('/images/reserve1-10-1920.webp'), small: asset('/images/reserve1-10-960.webp') },
+  { image: asset('/images/image6-1920.webp'), small: asset('/images/image6-960.webp') },
+  { image: asset('/images/image5-1920.webp'), small: asset('/images/image5-960.webp') },
 ]
+
+const srcSet = (s: { image: string; small: string }) => `${s.small} 960w, ${s.image} 1920w`
 
 function Hero() {
   // -mt-18 cancels the layout's header offset so the art runs under the header
@@ -19,6 +23,8 @@ function Hero() {
       <div aria-hidden="true" className="absolute inset-0">
         <img
           src={heroSlides[0].image}
+          srcSet={srcSet(heroSlides[0])}
+          sizes="100vw"
           alt=""
           className="h-full w-full object-cover opacity-55"
           fetchPriority="high"
@@ -72,12 +78,12 @@ const principles = [
   {
     title: 'The cleanest energy',
     body: 'It’s been said many times that the cleanest energy is the energy that does not have to be produced. We agree — efficiency comes first.',
-    image: heroSlides[1].image,
+    slide: heroSlides[1],
   },
   {
     title: 'Start where you already are',
     body: 'The easiest way to cut your footprint is to choose the right appliance, the right car, the right electricity supplier at the moment you were going to buy anyway.',
-    image: heroSlides[2].image,
+    slide: heroSlides[2],
   },
 ]
 
@@ -94,6 +100,9 @@ export default function Home() {
     <>
       <Hero />
 
+      {/* Proof numbers — hidden until data/site.ts has real ones */}
+      <StatsStrip />
+
       {/* Principles */}
       <Section>
         <Container size="wide">
@@ -102,7 +111,9 @@ export default function Home() {
               <Reveal key={p.title} delay={i * 90}>
                 <article className="group relative h-full overflow-hidden rounded-3xl border border-[var(--line)]">
                   <img
-                    src={p.image}
+                    src={p.slide.small}
+                    srcSet={srcSet(p.slide)}
+                    sizes="(min-width: 1024px) 50vw, 100vw"
                     alt=""
                     className="h-64 w-full object-cover transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-105"
                     loading="lazy"
@@ -214,7 +225,9 @@ export default function Home() {
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <Reveal>
               <img
-                src={asset('/images/seals.jpg')}
+                src={asset('/images/seals-1200.webp')}
+                srcSet={`${asset('/images/seals-600.webp')} 600w, ${asset('/images/seals-1200.webp')} 1200w`}
+                sizes="(min-width: 1024px) 50vw, 100vw"
                 alt="Seals resting on a shoreline"
                 className="w-full rounded-3xl object-cover shadow-xl shadow-forest-950/10"
                 loading="lazy"

@@ -3,7 +3,7 @@ import SolutionPage from '@/components/SolutionPage'
 
 export default function XLHybrids() {
   return (
-    <SolutionPage slug="xl-hybrids" heroImage={asset('/images/XLlogo.png')}>
+    <SolutionPage slug="xl-hybrids" heroImage={asset('/images/XLlogo.webp')}>
       <div className="rich-text">
         <p>
           A hybrid conversion is a cutting-edge technology designed to transform your existing
@@ -37,7 +37,9 @@ export default function XLHybrids() {
       </div>
 
       <img
-        src={asset('/images/XLPage.jpg')}
+        src={asset('/images/XLPage-1200.webp')}
+        srcSet={`${asset('/images/XLPage-600.webp')} 600w, ${asset('/images/XLPage-1200.webp')} 1200w`}
+        sizes="(min-width: 768px) 42rem, 100vw"
         alt="XL Hybrids conversion overview"
         className="mt-12 w-full rounded-2xl border border-[var(--line)] bg-white"
         loading="lazy"

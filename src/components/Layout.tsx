@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Header from './Header'
 import Footer from './Footer'
+import ErrorBoundary from './ErrorBoundary'
+import { usePageViews } from '@/lib/hooks'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -12,6 +14,8 @@ function ScrollToTop() {
 }
 
 export default function Layout() {
+  usePageViews()
+
   return (
     <div className="flex min-h-dvh flex-col">
       <a
@@ -23,7 +27,9 @@ export default function Layout() {
       <ScrollToTop />
       <Header />
       <main id="main" className="flex-1 pt-18">
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </main>
       <Footer />
     </div>

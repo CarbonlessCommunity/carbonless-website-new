@@ -27,11 +27,18 @@ type RawPost = {
   jetpack_featured_media_url?: string
 }
 
-/** Turns `&#8212;` and friends into real characters, and drops any tags. */
+/**
+ * Turns `&#8212;` and friends into real characters, and drops any tags.
+ *
+ * Tags are stripped by regex *before* the string touches the DOM, so nothing
+ * here can load a resource or run. A plain div rather than the usual textarea
+ * trick: textarea is a raw-text element, and the DOM implementation that backs
+ * the build-time prerender hands its entities back undecoded.
+ */
 export function decodeHtml(html: string): string {
-  const el = document.createElement('textarea')
+  const el = document.createElement('div')
   el.innerHTML = html.replace(/<[^>]+>/g, '')
-  return el.value.replace(/ /g, ' ').trim()
+  return (el.textContent ?? '').replace(/ /g, ' ').trim()
 }
 
 /**

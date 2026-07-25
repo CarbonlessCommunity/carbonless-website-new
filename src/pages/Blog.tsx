@@ -6,6 +6,7 @@ import { Arrow, Button, Container, Reveal, Section } from '@/components/ui'
 import { fetchPosts, formatDate, readingTime, type Post } from '@/lib/wordpress'
 import { site } from '@/data/site'
 import { usePageMeta } from '@/lib/hooks'
+import { getPrerenderData } from '@/lib/prerenderData'
 
 function PostSkeleton() {
   return (
@@ -27,8 +28,13 @@ export default function Blog() {
     'Information on all sides of the energy and environment discussions.',
   )
 
-  const [posts, setPosts] = useState<Post[]>([])
-  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
+  // Populated during the build-time prerender; empty in the browser, where the
+  // effect below fetches as usual.
+  const prerendered = getPrerenderData().posts
+  const [posts, setPosts] = useState<Post[]>(prerendered ?? [])
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>(
+    prerendered?.length ? 'ready' : 'loading',
+  )
 
   useEffect(() => {
     let active = true
@@ -111,7 +117,7 @@ export default function Blog() {
                       />
                     ) : (
                       <img
-                        src={asset('/images/image6.jpg')}
+                        src={asset('/images/image6-960.webp')}
                         alt=""
                         className="h-full w-full object-cover opacity-70 transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-105"
                       />

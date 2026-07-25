@@ -1,4 +1,5 @@
 import PageHeader from '@/components/PageHeader'
+import ContactForm from '@/components/ContactForm'
 import { Button, Container, Reveal, Section } from '@/components/ui'
 import { usePageMeta } from '@/lib/hooks'
 
@@ -72,6 +73,22 @@ export default function CreateCommunity() {
                 </li>
               </ol>
             </div>
+          </Reveal>
+        </Container>
+      </Section>
+
+      {/* The page that explains the offer should also be the page that closes it. */}
+      <Section tone="alt" id="start">
+        <Container size="narrow">
+          <Reveal>
+            <h2 className="font-display text-3xl leading-tight font-semibold text-[var(--ink)]">
+              Ready to start one?
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-[var(--ink-muted)]">
+              Tell us who your community would be and roughly how many people it covers. We’ll come
+              back with what’s worth doing first.
+            </p>
+            <ContactForm className="mt-9" />
           </Reveal>
         </Container>
       </Section>

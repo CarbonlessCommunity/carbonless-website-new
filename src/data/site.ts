@@ -7,6 +7,32 @@ export const site = {
   founded: 2012,
 }
 
+export type ImpactStat = {
+  /** The number itself, already formatted — '12', '1,400 t', '20%'. */
+  value: string | null
+  label: string
+  /** Optional line of context under the number. */
+  note?: string
+}
+
+/**
+ * The proof strip on the home page: the numbers a visitor looks for before
+ * deciding the organization is real.
+ *
+ * ────────────────────────────────────────────────────────────────────────────
+ * TO TURN THIS ON: replace each `value: null` with a real figure.
+ * The strip stays hidden until every stat has one — a null is treated as
+ * "we don't know this yet", and an unverified number on the home page costs
+ * more credibility than a missing section does.
+ * ────────────────────────────────────────────────────────────────────────────
+ */
+export const impactStats: ImpactStat[] = [
+  { value: null, label: 'Communities formed', note: 'Organizations running a Carbonless Community' },
+  { value: null, label: 'Tons of CO₂ avoided', note: `Across all measures since ${site.founded}` },
+  { value: null, label: 'Members participating', note: 'People tracking actions with us' },
+  { value: null, label: 'Saved on energy bills', note: 'Typical member savings to date' },
+]
+
 export const contacts = [
   {
     name: 'Craig Schuttenberg',

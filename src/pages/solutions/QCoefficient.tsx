@@ -3,7 +3,7 @@ import SolutionPage from '@/components/SolutionPage'
 
 export default function QCoefficient() {
   return (
-    <SolutionPage slug="qcoefficient" heroImage={asset('/images/qlogoBlue.png')}>
+    <SolutionPage slug="qcoefficient" heroImage={asset('/images/qlogoBlue.webp')}>
       <div className="rich-text">
         <p>
           Contracts from renewable generators don’t typically guarantee or specify{' '}

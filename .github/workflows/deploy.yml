@@ -31,12 +31,18 @@ jobs:
       # Pages serves this repo from /<repo>/ until a custom domain takes over.
       # public/CNAME is the switch: if it's there the site answers at a domain
       # root, so the base has to be '/'. See "Deploying" in the README.
+      #
+      # SITE_URL is the same decision expressed absolutely — the prerenderer
+      # stamps it into every canonical, og:url and sitemap entry, so it has to
+      # be where the page really lives, subpath included.
       - name: Resolve base path
         run: |
           if [ -f public/CNAME ]; then
             echo "PAGES_BASE=/" >> "$GITHUB_ENV"
+            echo "SITE_URL=https://$(tr -d '[:space:]' < public/CNAME)" >> "$GITHUB_ENV"
           else
             echo "PAGES_BASE=/${{ github.event.repository.name }}/" >> "$GITHUB_ENV"
+            echo "SITE_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" >> "$GITHUB_ENV"
           fi
 
       - run: npm run build

@@ -3,7 +3,7 @@ import SolutionPage from '@/components/SolutionPage'
 
 export default function ReverseAuction() {
   return (
-    <SolutionPage slug="reverse-auction" heroImage={asset('/images/satori.jpg')}>
+    <SolutionPage slug="reverse-auction" heroImage={asset('/images/satori.webp')}>
       <div className="rich-text">
         <h2>Online reverse auctions for energy procurement</h2>
         <p>
@@ -33,7 +33,7 @@ export default function ReverseAuction() {
 
       <figure className="mt-12">
         <img
-          src={asset('/images/auction.png')}
+          src={asset('/images/auction.webp')}
           alt="Screenshot of the auction results view a client sees at the conclusion of an auction"
           className="w-full rounded-2xl border border-[var(--line)] bg-white"
           loading="lazy"

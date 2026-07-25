@@ -9,7 +9,7 @@ const advantages = [
 
 export default function CommunitySolar() {
   return (
-    <SolutionPage slug="community-solar" heroImage={asset('/images/nexamp_logo.jpeg')}>
+    <SolutionPage slug="community-solar" heroImage={asset('/images/nexamp_logo.webp')}>
       <div className="rich-text">
         <p>
           Every so often, we come across an <strong>energy-related opportunity</strong> for our
@@ -100,13 +100,13 @@ export default function CommunitySolar() {
 
       <div className="mt-12 grid gap-4 sm:grid-cols-2">
         <img
-          src={asset('/images/Nexamp_1.jpeg')}
+          src={asset('/images/Nexamp_1.webp')}
           alt="Nexamp community solar"
           className="w-full rounded-2xl border border-[var(--line)] object-cover"
           loading="lazy"
         />
         <img
-          src={asset('/images/Nexamp_2.jpeg')}
+          src={asset('/images/Nexamp_2.webp')}
           alt="Nexamp community solar"
           className="w-full rounded-2xl border border-[var(--line)] object-cover"
           loading="lazy"

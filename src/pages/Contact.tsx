@@ -1,4 +1,5 @@
 import PageHeader from '@/components/PageHeader'
+import ContactForm from '@/components/ContactForm'
 import { Container, Reveal, Section } from '@/components/ui'
 import { contacts } from '@/data/site'
 import { usePageMeta } from '@/lib/hooks'
@@ -16,7 +17,20 @@ export default function Contact() {
 
       <Section>
         <Container size="wide">
-          <div className="grid gap-6 md:grid-cols-2">
+          <Reveal>
+            <ContactForm />
+          </Reveal>
+
+          <div className="mt-16">
+            <h2 className="font-display text-2xl font-semibold text-[var(--ink)]">
+              Or reach us directly
+            </h2>
+            <p className="mt-2 text-[var(--ink-muted)]">
+              If you’d rather pick up the phone.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-6 md:grid-cols-2">
             {contacts.map((c, i) => (
               <Reveal key={c.email} delay={i * 90}>
                 <div className="flex h-full flex-col rounded-3xl border border-[var(--line)] bg-[var(--surface-alt)] p-8 sm:p-10">
