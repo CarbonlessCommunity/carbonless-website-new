@@ -39,14 +39,20 @@ jobs:
       # SITE_URL is the same decision expressed absolutely — the prerenderer
       # stamps it into every canonical, og:url and sitemap entry, so it has to
       # be where the page really lives, subpath included.
+      #
+      # The owner is lowercased because github.repository_owner carries the
+      # account's display casing. Hosts resolve case-insensitively either way,
+      # but a canonical that doesn't match the URL visitors actually land on is
+      # the one thing a canonical exists to avoid.
       - name: Resolve base path
         run: |
           if [ -f public/CNAME ]; then
             echo "PAGES_BASE=/" >> "$GITHUB_ENV"
             echo "SITE_URL=https://$(tr -d '[:space:]' < public/CNAME)" >> "$GITHUB_ENV"
           else
+            owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
             echo "PAGES_BASE=/${{ github.event.repository.name }}/" >> "$GITHUB_ENV"
-            echo "SITE_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" >> "$GITHUB_ENV"
+            echo "SITE_URL=https://$owner.github.io/${{ github.event.repository.name }}" >> "$GITHUB_ENV"
           fi
 
       # Vite inlines VITE_* at build time, so these have to be present here
