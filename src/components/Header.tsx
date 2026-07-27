@@ -1,6 +1,6 @@
 import { asset } from '@/lib/asset'
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router'
 import { nav, site } from '@/data/site'
 import { Container, cx } from './ui'
 import { useTheme } from '@/lib/hooks'

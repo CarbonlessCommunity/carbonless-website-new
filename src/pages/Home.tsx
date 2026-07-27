@@ -1,5 +1,5 @@
 import { asset } from '@/lib/asset'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import StatsStrip from '@/components/StatsStrip'
 import Testimonials from '@/components/Testimonials'
 import { Arrow, Button, Container, Eyebrow, Quote, Reveal, Section } from '@/components/ui'

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { loadAnalytics, trackPageView } from './analytics'
 
 const STORAGE_KEY = 'cc-theme'

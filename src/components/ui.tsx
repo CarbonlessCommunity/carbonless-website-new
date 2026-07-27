@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 export const cx = (...parts: (string | false | null | undefined)[]) =>
   parts.filter(Boolean).join(' ')

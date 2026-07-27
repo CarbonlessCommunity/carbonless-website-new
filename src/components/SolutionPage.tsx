@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import PageHeader from './PageHeader'
 import { Arrow, Button, Container, Reveal, Section } from './ui'
 import { getSolution, solutions } from '@/data/solutions'

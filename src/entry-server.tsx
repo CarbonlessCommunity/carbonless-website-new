@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server'
-// React Router 7 dropped the `react-router-dom/server` entry; StaticRouter now
-// ships from `react-router` itself.
+// React Router 8 removed the `react-router-dom` package outright — everything
+// but RouterProvider/HydratedRouter now ships from `react-router` itself.
 import { StaticRouter } from 'react-router'
 import App from './App'
 import { setPrerenderData, type PrerenderData } from './lib/prerenderData'

@@ -1,5 +1,5 @@
 import { asset } from '@/lib/asset'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { contacts, nav, site } from '@/data/site'
 import SubscribeForm from './SubscribeForm'
 import { Container } from './ui'

@@ -1,6 +1,6 @@
 import { asset } from '@/lib/asset'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import PageHeader from '@/components/PageHeader'
 import { Arrow, Button, Container, Reveal, Section } from '@/components/ui'
 import { fetchPosts, formatDate, readingTime, type Post } from '@/lib/wordpress'

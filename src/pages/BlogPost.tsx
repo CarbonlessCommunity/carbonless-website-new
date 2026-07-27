@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router'
 import { Arrow, Button, Container, Reveal, Section } from '@/components/ui'
 import { fetchPost, formatDate, readingTime, type Post } from '@/lib/wordpress'
 import { site } from '@/data/site'
