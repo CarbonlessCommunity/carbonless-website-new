@@ -107,14 +107,21 @@ export async function fetchPost(slug: string): Promise<Post | null> {
   const res = await fetch(`${API}/posts?slug=${encodeURIComponent(slug)}`)
   if (!res.ok) throw new Error(`Could not load post (${res.status})`)
   const data: RawPost[] = await res.json()
-  return data.length ? normalize(data[0]) : null
+  const [post] = data
+  return post ? normalize(post) : null
 }
 
 export function formatDate(iso: string): string {
+  // A date-only string parses as UTC midnight, so west of Greenwich it renders
+  // as the day before — '2020-10-01' showed up as "September 30, 2020". Full
+  // timestamps (what the WordPress API returns) carry a real offset and stay in
+  // the reader's zone.
+  const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(iso)
   return new Date(iso).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    ...(dateOnly && { timeZone: 'UTC' }),
   })
 }
 

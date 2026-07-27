@@ -1,10 +1,20 @@
 @import 'tailwindcss';
 
+/* Self-hosted instead of Google Fonts: the stylesheet there is render-blocking
+   on a third-party origin, so first paint waited on two extra connections —
+   and Google logs visitor IPs, which is a GDPR question we don't need.
+   `wght` is the smallest entrypoint of each family that still covers the
+   400–700 range in use; the variable axis means one file per family, not four.
+   Vite hashes the woff2s into dist/assets and scripts/prerender.mjs preloads
+   the latin ones. */
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/fraunces/wght.css';
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
 
   /* Forest — the primary brand ramp */
   --color-forest-50: #f0f7f3;

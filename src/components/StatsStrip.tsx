@@ -1,21 +1,32 @@
-import { Container, Reveal, Section } from '@/components/ui'
+import { Container, cx, Reveal, Section } from '@/components/ui'
 import { impactStats } from '@/data/site'
 
 /**
  * The home page's proof strip.
  *
- * Renders nothing until every stat in `impactStats` has a real value — see the
- * note beside that array in `data/site.ts`. Placeholder numbers on a home page
- * are worse than no numbers, so the slot stays dormant rather than guessing.
+ * Shows whichever stats in `impactStats` have real values and drops the rest —
+ * an unknown figure hides itself, not its neighbours. Placeholder numbers on a
+ * home page are worse than no numbers, so nothing is ever invented to fill a
+ * slot; see the note beside that array in `data/site.ts`.
+ *
+ * Below two stats the section stays hidden entirely: one number on its own
+ * reads as an orphan rather than as proof.
  */
+const MIN_STATS = 2
+
 export default function StatsStrip() {
   const stats = impactStats.filter((s): s is typeof s & { value: string } => Boolean(s.value))
-  if (stats.length !== impactStats.length || !stats.length) return null
+  if (stats.length < MIN_STATS) return null
 
   return (
     <Section tone="alt" className="py-14 sm:py-16">
       <Container size="wide">
-        <dl className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <dl
+          className={cx(
+            'grid gap-8 sm:grid-cols-2',
+            stats.length >= 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3',
+          )}
+        >
           {stats.map((stat, i) => (
             <Reveal key={stat.label} delay={i * 70}>
               {/* `order` puts the number on top visually while the DOM keeps

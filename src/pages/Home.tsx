@@ -1,19 +1,32 @@
 import { asset } from '@/lib/asset'
 import { Link } from 'react-router-dom'
 import StatsStrip from '@/components/StatsStrip'
+import Testimonials from '@/components/Testimonials'
 import { Arrow, Button, Container, Eyebrow, Quote, Reveal, Section } from '@/components/ui'
 import { solutions } from '@/data/solutions'
 import { site } from '@/data/site'
 import { usePageMeta } from '@/lib/hooks'
 
-/** Each still ships at two widths; `srcSet` keeps phones off the 1920 file. */
-const heroSlides = [
-  { image: asset('/images/reserve1-10-1920.webp'), small: asset('/images/reserve1-10-960.webp') },
-  { image: asset('/images/image6-1920.webp'), small: asset('/images/image6-960.webp') },
-  { image: asset('/images/image5-1920.webp'), small: asset('/images/image5-960.webp') },
-]
+type Slide = { image: string; small: string }
 
-const srcSet = (s: { image: string; small: string }) => `${s.small} 960w, ${s.image} 1920w`
+/**
+ * Each still ships at two widths; `srcSet` keeps phones off the 1920 file.
+ *
+ * Keyed by where the image is used rather than indexed, so a reader can tell
+ * which still moves when one of these changes.
+ */
+const slide = (name: string): Slide => ({
+  image: asset(`/images/${name}-1920.webp`),
+  small: asset(`/images/${name}-960.webp`),
+})
+
+const stills = {
+  hero: slide('reserve1-10'),
+  efficiency: slide('image6'),
+  everyday: slide('image5'),
+}
+
+const srcSet = (s: Slide) => `${s.small} 960w, ${s.image} 1920w`
 
 function Hero() {
   // -mt-18 cancels the layout's header offset so the art runs under the header
@@ -22,8 +35,8 @@ function Hero() {
       {/* Layered stills replace the old auto-rotating carousel — no motion, no CLS */}
       <div aria-hidden="true" className="absolute inset-0">
         <img
-          src={heroSlides[0].image}
-          srcSet={srcSet(heroSlides[0])}
+          src={stills.hero.image}
+          srcSet={srcSet(stills.hero)}
           sizes="100vw"
           alt=""
           className="h-full w-full object-cover opacity-55"
@@ -78,12 +91,12 @@ const principles = [
   {
     title: 'The cleanest energy',
     body: 'It’s been said many times that the cleanest energy is the energy that does not have to be produced. We agree — efficiency comes first.',
-    slide: heroSlides[1],
+    slide: stills.efficiency,
   },
   {
     title: 'Start where you already are',
     body: 'The easiest way to cut your footprint is to choose the right appliance, the right car, the right electricity supplier at the moment you were going to buy anyway.',
-    slide: heroSlides[2],
+    slide: stills.everyday,
   },
 ]
 
@@ -218,6 +231,10 @@ export default function Home() {
           </Reveal>
         </Container>
       </Section>
+
+      {/* Participants in their own words — the quote above is the org's own
+          voice, which can't do this job. Hidden until data/site.ts has real ones. */}
+      <Testimonials />
 
       {/* Creating a community */}
       <Section tone="alt">

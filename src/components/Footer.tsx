@@ -1,6 +1,7 @@
 import { asset } from '@/lib/asset'
 import { Link } from 'react-router-dom'
 import { contacts, nav, site } from '@/data/site'
+import SubscribeForm from './SubscribeForm'
 import { Container } from './ui'
 
 export default function Footer() {
@@ -81,6 +82,13 @@ export default function Footer() {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="border-t border-[var(--line)] py-10">
+          <h3 className="font-sans text-xs font-semibold tracking-[0.16em] text-[var(--ink)] uppercase">
+            Stay in touch
+          </h3>
+          <SubscribeForm variant="compact" className="mt-4 max-w-lg" />
         </div>
 
         <div className="flex flex-col gap-3 border-t border-[var(--line)] py-6 text-sm text-[var(--ink-muted)] sm:flex-row sm:items-center sm:justify-between">

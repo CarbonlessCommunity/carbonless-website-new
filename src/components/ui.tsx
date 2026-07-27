@@ -34,8 +34,14 @@ export function Section({
     alt: 'bg-[var(--surface-alt)]',
     deep: 'bg-forest-950 text-forest-50',
   }
+  // Tailwind resolves conflicting utilities by their order in the generated
+  // stylesheet, not by their order in the class attribute — so appending a
+  // caller's `py-14` after the default `sm:py-28` did nothing, and every
+  // section that asked for tighter spacing silently rendered at the default.
+  // Drop the default when the caller has stated its own vertical padding.
+  const ownsPadding = /(^|\s)(py|pt|pb)-/.test(className ?? '')
   return (
-    <section id={id} className={cx('py-20 sm:py-28', tones[tone], className)}>
+    <section id={id} className={cx(!ownsPadding && 'py-20 sm:py-28', tones[tone], className)}>
       {children}
     </section>
   )

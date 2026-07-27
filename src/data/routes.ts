@@ -23,6 +23,16 @@ export type RouteMeta = {
   description: string
   /** Sitemap priority, 0–1. Defaults to 0.7. */
   priority?: number
+  /**
+   * A page that exists and is linked, but isn't finished enough to index.
+   *
+   * The prerenderer still writes its HTML — the URL has to work for anyone who
+   * follows a link — but leaves it out of `sitemap.xml` and adds
+   * `<meta name="robots" content="noindex">`. Thin pages in the index pull down
+   * the quality signal for the whole site, so an unfinished page is better
+   * unlisted than listed.
+   */
+  draft?: boolean
 }
 
 const staticRoutes: RouteMeta[] = [
@@ -78,10 +88,13 @@ const staticRoutes: RouteMeta[] = [
     priority: 0.8,
   },
   {
+    // One issue, from 2020 — unlisted until the archive has something to it.
+    // Drop `draft` once `data/newsletters.ts` holds a second entry.
     path: '/newsletters',
     title: 'Newsletters',
     description: 'Periodic updates from the Carbonless Community team.',
     priority: 0.5,
+    draft: true,
   },
   {
     path: '/products-corner',
@@ -90,10 +103,13 @@ const staticRoutes: RouteMeta[] = [
     priority: 0.5,
   },
   {
+    // Placeholder copy ("this page is still being written") — unlisted until
+    // there's something on it.
     path: '/technology-corner',
     title: 'Technology Corner',
     description: 'Emerging low-carbon technology worth paying attention to.',
     priority: 0.5,
+    draft: true,
   },
 ]
 

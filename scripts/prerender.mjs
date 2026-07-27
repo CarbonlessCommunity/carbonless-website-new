@@ -14,7 +14,7 @@
  * exits non-zero at the end, but the other routes still get written. A blog API
  * outage degrades to "no blog pages prerendered" rather than a failed deploy.
  */
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -29,6 +29,9 @@ const dist = path.join(root, 'dist')
  * to it directly. The workflow sets it; the default is the cutover domain.
  */
 const SITE_URL = (process.env.SITE_URL || 'https://www.carbonlesscommunity.com').replace(/\/$/, '')
+
+/** Social preview image, absolute against wherever the site actually answers. */
+const ogImage = `${SITE_URL}/images/og-image.jpg`
 
 // ---------------------------------------------------------------------------
 // The app's HTML sanitizer runs on DOMParser, which Node doesn't have. Install
@@ -48,19 +51,74 @@ globalThis.DOMParser = class {
 }
 globalThis.document = sharedDocument
 
-const { render, routes, fetchPosts } = await import(path.join(root, 'dist-ssr/entry-server.js'))
+const {
+  render,
+  routes,
+  fetchPosts,
+  organizationSchema,
+  websiteSchema,
+  blogPostingSchema,
+  breadcrumbSchema,
+} = await import(path.join(root, 'dist-ssr/entry-server.js'))
 
-const shell = await readFile(path.join(dist, 'index.html'), 'utf8')
+/**
+ * Preloads the self-hosted body and display faces.
+ *
+ * Fonts are imported from src/index.css, so the browser can't discover them
+ * until it has fetched and parsed the stylesheet — two serialised round trips
+ * before any text renders in the real typeface. A preload starts the font
+ * fetch in parallel with the CSS instead.
+ *
+ * Latin only, deliberately: @fontsource ships a file per unicode subset and the
+ * site's copy is English, so preloading cyrillic/greek/vietnamese would spend
+ * bandwidth on bytes no visitor renders. Vite hashes the filenames, hence the
+ * directory scan rather than a hardcoded list.
+ */
+async function fontPreloads() {
+  const base = (process.env.PAGES_BASE || '/').replace(/\/$/, '')
+  let files = []
+  try {
+    files = await readdir(path.join(dist, 'assets'))
+  } catch {
+    return ''
+  }
+  const latin = files.filter((f) => /-latin-wght-normal-[^.]*\.woff2$/.test(f))
+  if (!latin.length) console.warn('prerender: no latin woff2 found in dist/assets — fonts not preloaded')
+  return latin
+    .map(
+      (f) =>
+        `    <link rel="preload" as="font" type="font/woff2" crossorigin href="${base}/assets/${f}" />\n`,
+    )
+    .join('')
+}
+
+const shell = (await readFile(path.join(dist, 'index.html'), 'utf8')).replace(
+  '</head>',
+  `${await fontPreloads()}  </head>`,
+)
 
 const escapeAttr = (value) =>
   String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+/**
+ * Serializes a JSON-LD node for embedding in a <script> tag.
+ *
+ * Deliberately NOT escapeAttr: inside a script element the parser is looking for
+ * the literal `</script`, so `<` and `&` are the characters that matter and HTML
+ * attribute escaping would corrupt the JSON. Escaping `<` as < keeps the
+ * value valid JSON while making the closing-tag sequence unrepresentable.
+ */
+const jsonLd = (node) => JSON.stringify(node).replace(/</g, '\\u003c')
+
+/** Route title lookup for breadcrumb trails, built once. */
+const titleByPath = new Map(routes.map((r) => [r.path, r.title]))
 
 /**
  * Rewrites the per-page tags in the built shell and injects the rendered markup.
  * Everything else in <head> — stylesheet links, the theme script, fonts — is
  * left exactly as Vite emitted it.
  */
-function buildPage({ path: routePath, title, description, markup }) {
+function buildPage({ path: routePath, title, description, markup, draft = false, schemas = [] }) {
   // The home page keeps the marketing title from index.html; every other page
   // gets the same "<page> — Carbonless Community" shape `usePageMeta` produces.
   const fullTitle =
@@ -83,10 +141,25 @@ function buildPage({ path: routePath, title, description, markup }) {
       /<meta\s+property="og:description"[\s\S]*?\/>/,
       `<meta property="og:description" content="${escapeAttr(description)}" />`,
     )
+    // index.html hardcodes the cutover domain so the tag is absolute even in a
+    // raw `vite build`. Restamp it from SITE_URL, or every link shared while the
+    // site is on the /<repo>/ subpath points its preview image at a host that
+    // isn't serving the site.
+    .replace(
+      /<meta\s+property="og:image"[^>]*\/>/,
+      `<meta property="og:image" content="${escapeAttr(ogImage)}" />`,
+    )
     .replace(
       '</head>',
       `  <link rel="canonical" href="${escapeAttr(canonical)}" />\n` +
-        `    <meta property="og:url" content="${escapeAttr(canonical)}" />\n  </head>`,
+        `    <meta property="og:url" content="${escapeAttr(canonical)}" />\n` +
+        `    <meta name="twitter:image" content="${escapeAttr(ogImage)}" />\n` +
+        (draft ? `    <meta name="robots" content="noindex, follow" />\n` : '') +
+        schemas
+          .filter(Boolean)
+          .map((s) => `    <script type="application/ld+json">${jsonLd(s)}</script>\n`)
+          .join('') +
+        `  </head>`,
     )
     .replace('<div id="root"></div>', `<div id="root">${markup}</div>`)
 }
@@ -101,11 +174,23 @@ async function writePage(routePath, html) {
 
 const failures = []
 
+// The entity nodes are identical on every page — build them once. Google reads a
+// repeated, consistent Organization across a site as its definition.
+const orgSchema = organizationSchema(SITE_URL)
+const siteSchema = websiteSchema(SITE_URL)
+
 // --- Static routes ---------------------------------------------------------
 for (const route of routes) {
   try {
     const markup = render(`${route.path}`)
-    await writePage(route.path, buildPage({ ...route, markup }))
+    const schemas = [
+      orgSchema,
+      // WebSite belongs on the home page only; repeating it site-wide adds
+      // nothing and muddies which URL is the search target.
+      route.path === '/' ? siteSchema : null,
+      breadcrumbSchema(SITE_URL, route.path, (p) => titleByPath.get(p)),
+    ]
+    await writePage(route.path, buildPage({ ...route, markup, schemas }))
   } catch (error) {
     failures.push(`${route.path}: ${error.message}`)
   }
@@ -131,6 +216,7 @@ if (posts.length) {
       title: 'Blog',
       description: 'Information on all sides of the energy and environment discussions.',
       markup,
+      schemas: [orgSchema],
     }))
   } catch (error) {
     failures.push(`/blog: ${error.message}`)
@@ -145,6 +231,13 @@ if (posts.length) {
         title: post.title,
         description: post.excerpt?.slice(0, 200) || 'A post from the Carbonless Community blog.',
         markup,
+        schemas: [
+          orgSchema,
+          blogPostingSchema(SITE_URL, post),
+          breadcrumbSchema(SITE_URL, routePath, (p) =>
+            p === '/blog' ? 'Blog' : titleByPath.get(p) ?? post.title,
+          ),
+        ],
       }))
       blogRoutes.push({ path: routePath, priority: 0.6, lastmod: post.date })
     } catch (error) {
@@ -161,10 +254,15 @@ if (posts.length) {
 await writeFile(path.join(dist, '404.html'), shell)
 
 // --- sitemap.xml -----------------------------------------------------------
+// Draft routes are written and linked, but stay out of the index — they carry a
+// `noindex` tag from buildPage, and listing them here would contradict it.
 const sitemapEntries = [
-  ...routes.map((r) => ({ path: r.path, priority: r.priority ?? 0.7 })),
+  ...routes.filter((r) => !r.draft).map((r) => ({ path: r.path, priority: r.priority ?? 0.7 })),
   ...blogRoutes,
 ]
+
+const draftCount = routes.filter((r) => r.draft).length
+if (draftCount) console.log(`prerender: ${draftCount} draft route(s) excluded from sitemap`)
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

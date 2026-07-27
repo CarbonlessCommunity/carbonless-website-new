@@ -9,6 +9,12 @@ import { setPrerenderData, type PrerenderData } from './lib/prerenderData'
 // build bundles this entry and everything it reaches.
 export { routes } from './data/routes'
 export { fetchPosts } from './lib/wordpress'
+export {
+  organizationSchema,
+  websiteSchema,
+  blogPostingSchema,
+  breadcrumbSchema,
+} from './lib/schema'
 
 /**
  * Renders one route to an HTML string, for `scripts/prerender.mjs`.

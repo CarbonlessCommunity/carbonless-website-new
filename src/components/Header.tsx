@@ -1,9 +1,10 @@
 import { asset } from '@/lib/asset'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { nav, site } from '@/data/site'
 import { Container, cx } from './ui'
 import { useTheme } from '@/lib/hooks'
+import { useFocusTrap } from '@/lib/useFocusTrap'
 
 function ThemeToggle({ overHero }: { overHero?: boolean }) {
   const { theme, toggle } = useTheme()
@@ -33,11 +34,60 @@ function ThemeToggle({ overHero }: { overHero?: boolean }) {
   )
 }
 
+/**
+ * Roving focus for the desktop dropdowns.
+ *
+ * The items are queried from the DOM rather than held in refs: the menu mounts
+ * and unmounts with `openMenu`, so a ref array would need clearing on every
+ * open, and the data attribute survives that for free.
+ */
+function menuItems(label: string): HTMLElement[] {
+  return [...document.querySelectorAll<HTMLElement>(`[data-menu-item="${CSS.escape(label)}"]`)]
+}
+
+function focusMenuItem(label: string, index: number) {
+  const items = menuItems(label)
+  if (!items.length) return
+  // Wrap at both ends, which is what the menu pattern specifies.
+  items[((index % items.length) + items.length) % items.length]?.focus()
+}
+
+function handleMenuKeys(event: React.KeyboardEvent, label: string) {
+  // The window-level Escape handler closes the menu; this puts focus back on
+  // the trigger, which would otherwise fall to <body> when the menu unmounts.
+  if (event.key === 'Escape') {
+    document.getElementById(`menubtn-${label}`)?.focus()
+    return
+  }
+
+  const items = menuItems(label)
+  const current = items.indexOf(document.activeElement as HTMLElement)
+  if (current === -1) return
+
+  const moves: Record<string, number> = {
+    ArrowDown: current + 1,
+    ArrowUp: current - 1,
+    Home: 0,
+    End: items.length - 1,
+  }
+
+  const next = moves[event.key]
+  if (next === undefined) return
+
+  event.preventDefault()
+  focusMenuItem(label, next)
+}
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [openMenu, setOpenMenu] = useState<string | null>(null)
   const location = useLocation()
+
+  // The trap covers the whole header rather than just the sheet, so the close
+  // button and theme toggle in the bar stay keyboard-reachable while it's open.
+  const headerRef = useRef<HTMLElement>(null)
+  useFocusTrap(headerRef, mobileOpen)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -81,6 +131,7 @@ export default function Header() {
 
   return (
     <header
+      ref={headerRef}
       className={cx(
         'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         scrolled || mobileOpen
@@ -119,11 +170,32 @@ export default function Header() {
                   className="relative"
                   onMouseEnter={() => setOpenMenu(item.label)}
                   onMouseLeave={() => setOpenMenu(null)}
+                  // Closing on blur-out keeps a keyboard user from leaving an
+                  // open menu behind as they tab along the bar.
+                  onBlur={(e) => {
+                    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                      setOpenMenu((m) => (m === item.label ? null : m))
+                    }
+                  }}
                 >
                   <button
                     type="button"
+                    id={`menubtn-${item.label}`}
                     aria-expanded={openMenu === item.label}
+                    aria-haspopup="true"
+                    aria-controls={`menu-${item.label}`}
                     onClick={() => setOpenMenu((m) => (m === item.label ? null : item.label))}
+                    onKeyDown={(e) => {
+                      // Down opens and moves into the list, matching what the
+                      // menu-button pattern leads people to expect.
+                      if (e.key === 'ArrowDown') {
+                        e.preventDefault()
+                        setOpenMenu(item.label)
+                        requestAnimationFrame(() => focusMenuItem(item.label, 0))
+                      } else if (e.key === 'Escape') {
+                        setOpenMenu(null)
+                      }
+                    }}
                     className={cx(
                       'flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition-colors',
                       location.pathname.startsWith(item.to ?? '\0') || openMenu === item.label
@@ -149,12 +221,20 @@ export default function Header() {
 
                   {openMenu === item.label && (
                     <div className="absolute top-full left-1/2 w-[26rem] -translate-x-1/2 pt-2">
-                      <div className="reveal-in grid gap-0.5 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-2 shadow-xl shadow-forest-950/10 dark:shadow-black/40">
+                      <div
+                        id={`menu-${item.label}`}
+                        role="menu"
+                        aria-label={item.label}
+                        onKeyDown={(e) => handleMenuKeys(e, item.label)}
+                        className="reveal-in grid gap-0.5 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-2 shadow-xl shadow-forest-950/10 dark:shadow-black/40"
+                      >
                         {item.children.map((child) => (
                           <Link
                             key={child.to + child.label}
                             to={child.to}
-                            className="group rounded-xl px-3.5 py-2.5 transition-colors hover:bg-[var(--surface-alt)]"
+                            role="menuitem"
+                            data-menu-item={item.label}
+                            className="group rounded-xl px-3.5 py-2.5 transition-colors hover:bg-[var(--surface-alt)] focus-visible:bg-[var(--surface-alt)]"
                           >
                             <span className="block text-sm font-semibold text-[var(--ink)]">
                               {child.label}
@@ -193,8 +273,9 @@ export default function Header() {
             </Link>
             <button
               type="button"
-              aria-label="Toggle menu"
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
+              aria-controls="mobile-menu"
               onClick={() => setMobileOpen((o) => !o)}
               className={cx(
                 'grid h-9 w-9 place-items-center rounded-full border lg:hidden',
@@ -209,9 +290,18 @@ export default function Header() {
         </div>
       </Container>
 
-      {/* Mobile nav */}
+      {/* Mobile nav.
+          role="dialog" without aria-modal on purpose: the bar above stays
+          deliberately reachable (it holds the close button and theme toggle),
+          and aria-modal would tell assistive tech that everything outside this
+          element — including those — is inert. */}
       {mobileOpen && (
-        <div className="reveal-in max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-[var(--line)] bg-[var(--surface)] lg:hidden">
+        <div
+          id="mobile-menu"
+          role="dialog"
+          aria-label="Site menu"
+          className="reveal-in max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-[var(--line)] bg-[var(--surface)] lg:hidden"
+        >
           <Container size="wide">
             <nav className="flex flex-col gap-1 py-6">
               <NavLink to="/" className="rounded-xl px-3 py-2.5 text-base font-semibold text-[var(--ink)]">

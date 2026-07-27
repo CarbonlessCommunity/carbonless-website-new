@@ -47,6 +47,27 @@ export default function SolutionPage({
         </Container>
       </Section>
 
+      {/* A reader who's sold shouldn't have to navigate sideways to act — the
+          "other measures" rail below is for the ones who aren't. */}
+      <Section tone="deep" className="py-14 sm:py-16">
+        <Container size="narrow">
+          <div className="flex flex-col items-center gap-6 text-center">
+            <h2 className="font-display text-2xl font-semibold text-balance sm:text-3xl">
+              Interested in {solution.name} for your organization?
+            </h2>
+            <p className="max-w-xl leading-relaxed opacity-80">
+              Tell us roughly where you are today and we’ll walk you through what it would take.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button to="/contact">Talk to us</Button>
+              <Button to="/communities/create" variant="secondary">
+                Start a community
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
       <Section tone="alt" className="py-16 sm:py-20">
         <Container size="wide">
           <h2 className="font-display text-2xl font-semibold text-[var(--ink)]">

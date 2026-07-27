@@ -26,26 +26,63 @@ npm run dev
 | Script | Does |
 | --- | --- |
 | `npm run dev` | Dev server on http://localhost:5173 |
-| `npm run build` | Typecheck, bundle to `dist/`, then copy `index.html` → `404.html` |
+| `npm run build` | Typecheck, bundle to `dist/`, build the SSR entry, then prerender every route (see below) |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | oxlint |
+| `npm test` | Vitest — covers the blog HTML sanitizer |
+
+### What `npm run build` actually does
+
+Four steps, in order:
+
+1. `tsc -b` — typecheck (strict, with `noUncheckedIndexedAccess`).
+2. `vite build` — the client bundle into `dist/`.
+3. `vite build --ssr src/entry-server.tsx` — a Node-renderable copy into `dist-ssr/`.
+4. `node scripts/prerender.mjs` — renders each route in Node and writes a real
+   `dist/<path>/index.html` with that page's `<title>`, description, canonical,
+   `og:*` tags and JSON-LD, then emits `404.html`, `sitemap.xml` and `robots.txt`.
+
+`node scripts/check-build.mjs` verifies the output afterwards; CI runs it before
+uploading the artifact.
+
+### Environment variables
+
+All optional — each feature degrades rather than breaking when its variable is unset.
+In CI they come from repo secrets of the same name (see `.github/workflows/deploy.yml`).
+
+| Variable | Unset behaviour |
+| --- | --- |
+| `VITE_FORMSPREE_ID` | Contact form hands off to `mailto:` instead of posting |
+| `VITE_FORMSPREE_NEWSLETTER_ID` | Subscribe form hands off to `mailto:` |
+| `VITE_PLAUSIBLE_DOMAIN` | Analytics script is never injected |
 
 ## Layout
 
 ```
 src/
   data/          Ported site content as typed records — edit here, not in JSX
-    site.ts        Org details, contacts, nav tree
+    site.ts        Org details, contacts, impact stats, testimonials, nav tree
     people.ts      Team and alumni bios
     solutions.ts   The 8 partner measures + UCapture offset projects
+    newsletters.ts Newsletter issues (PDFs live in public/newsletters/)
+    routes.ts      Every crawlable route's title/description/priority
   pages/         One file per route
     solutions/     8 solution pages, all wrapping <SolutionPage>
     communities/
   components/    Layout, Header, Footer, PageHeader, SolutionPage, ui.tsx primitives
   lib/
     wordpress.ts   Blog API client + HTML sanitizer
-    hooks.ts       useTheme, usePageMeta
+    hooks.ts       useTheme, usePageMeta, usePageViews
+    asset.ts       Prefixes BASE_URL onto public/ paths — use for anything there
+    analytics.ts   Cookieless Plausible, only loads when its env var is set
+    schema.ts      JSON-LD builders, stamped into <head> at prerender time
+    useFormspree.ts  Shared submit/state machine for the contact + subscribe forms
+    prerenderData.ts Lets the build hand fetched blog posts to the Node render
+  entry-server.tsx  Node render entry; also re-exports what prerender.mjs needs
   index.css      The whole design system: @theme tokens, light/dark vars, .rich-text
+scripts/
+  prerender.mjs   Per-route HTML, sitemap.xml, robots.txt
+  check-build.mjs Asserts the above came out right
 ```
 
 ### Content lives in `src/data`
@@ -90,17 +127,21 @@ directory, which is now source code rather than the site.
 
 Two files the old site didn't need:
 
-- `404.html` — GitHub Pages has no rewrite rules, so a deep link like `/solutions/enerfusion`
-  would 404 on refresh. `npm run build` copies `index.html` over it, which hands the URL back to
-  React Router.
+- `404.html` — GitHub Pages has no rewrite rules, so a deep link that misses a prerendered file
+  falls back to this. It is deliberately the *unrendered* shell, so React Router reads the URL on
+  load and renders whatever the path actually is.
 - `.nojekyll` — stops Pages from processing the build output.
 
 ### Base path
 
 Pages serves the repo from `/carbonless-website-new/`, so the build needs a matching `base`.
-Vite rewrites the asset URLs it owns, but not strings like `'/images/Logo.png'` — those go
+Vite rewrites the asset URLs it owns, but not strings like `'/images/Logo.webp'` — those go
 through `asset()` in `src/lib/asset.ts`, which prefixes `import.meta.env.BASE_URL`. **Use it for
 anything in `public/`.** `BrowserRouter` gets the same value as its `basename`.
+
+The workflow also derives `SITE_URL` from the same decision, expressed absolutely. The
+prerenderer stamps it into every canonical, `og:url`, `og:image` and sitemap entry, so those stay
+correct on both the subpath and the custom domain.
 
 ### Cutting over to www.carbonlesscommunity.com
 

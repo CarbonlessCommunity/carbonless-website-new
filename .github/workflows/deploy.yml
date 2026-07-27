@@ -28,6 +28,10 @@ jobs:
 
       - run: npm ci
 
+      - run: npm run lint
+
+      - run: npm test
+
       # Pages serves this repo from /<repo>/ until a custom domain takes over.
       # public/CNAME is the switch: if it's there the site answers at a domain
       # root, so the base has to be '/'. See "Deploying" in the README.
@@ -45,7 +49,17 @@ jobs:
             echo "SITE_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" >> "$GITHUB_ENV"
           fi
 
+      # Vite inlines VITE_* at build time, so these have to be present here
+      # rather than at runtime. Each is optional: an unset secret resolves to an
+      # empty string, and the app falls back (contact/subscribe forms hand off
+      # to mailto:, analytics simply doesn't load).
       - run: npm run build
+        env:
+          VITE_FORMSPREE_ID: ${{ secrets.VITE_FORMSPREE_ID }}
+          VITE_FORMSPREE_NEWSLETTER_ID: ${{ secrets.VITE_FORMSPREE_NEWSLETTER_ID }}
+          VITE_PLAUSIBLE_DOMAIN: ${{ secrets.VITE_PLAUSIBLE_DOMAIN }}
+
+      - run: node scripts/check-build.mjs
 
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -1,15 +1,10 @@
-import { useState } from 'react'
 import { cx } from './ui'
-import { contacts } from '@/data/site'
+import { honeypotProps, useFormspree } from '@/lib/useFormspree'
 
 /**
- * Lead capture for a static host.
- *
- * Set `VITE_FORMSPREE_ID` and submissions POST to Formspree, which emails them
- * on. Leave it unset — the default — and the form still works: it composes a
- * pre-filled `mailto:` to the first contact and hands off to the visitor's mail
- * client. That is worse (it needs a configured mail app, and nothing is
- * recorded server-side), so treat it as the stopgap, not the destination.
+ * Lead capture for a static host. Posts to Formspree when
+ * `VITE_FORMSPREE_ID` is set, and falls back to a pre-filled `mailto:`
+ * otherwise — see `lib/useFormspree.ts` for why both modes exist.
  */
 const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID as string | undefined
 
@@ -21,57 +16,24 @@ const SIZES = [
   'More than 10,000',
 ]
 
-type Status = 'idle' | 'submitting' | 'success' | 'error'
-
 const field =
   'w-full rounded-xl border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-[var(--ink)] transition-colors placeholder:text-[var(--ink-muted)]/70 focus:border-forest-500 focus:ring-2 focus:ring-forest-500/25 focus:outline-none'
 const label = 'block text-xs font-semibold tracking-[0.14em] text-[var(--ink-muted)] uppercase'
 
 export default function ContactForm({ className }: { className?: string }) {
-  const [status, setStatus] = useState<Status>('idle')
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const form = event.currentTarget
-    const data = new FormData(form)
-
-    // Honeypot: a field no human sees, so anything that fills it is a bot.
-    // Report success so the bot doesn't retry with a different shape.
-    if (data.get('website')) {
-      setStatus('success')
-      return
-    }
-
-    if (!FORMSPREE_ID) {
-      const body = [
+  const { status, handleSubmit, isConfigured, fallbackEmail } = useFormspree({
+    formId: FORMSPREE_ID,
+    mailSubject: 'Carbonless Community enquiry',
+    mailBody: (data) =>
+      [
         `Name: ${data.get('name')}`,
         `Email: ${data.get('email')}`,
         `Organization: ${data.get('organization')}`,
         `Size: ${data.get('size')}`,
         '',
         String(data.get('message') ?? ''),
-      ].join('\n')
-      window.location.href = `mailto:${contacts[0].email}?subject=${encodeURIComponent(
-        'Carbonless Community enquiry',
-      )}&body=${encodeURIComponent(body)}`
-      setStatus('success')
-      return
-    }
-
-    setStatus('submitting')
-    try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-        method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' },
-      })
-      if (!res.ok) throw new Error(String(res.status))
-      form.reset()
-      setStatus('success')
-    } catch {
-      setStatus('error')
-    }
-  }
+      ].join('\n'),
+  })
 
   if (status === 'success') {
     return (
@@ -83,7 +45,7 @@ export default function ContactForm({ className }: { className?: string }) {
       >
         <h3 className="font-display text-2xl font-semibold text-[var(--ink)]">Thanks — got it</h3>
         <p className="mx-auto mt-3 max-w-md text-[var(--ink-muted)]">
-          {FORMSPREE_ID
+          {isConfigured
             ? 'We’ll come back to you within a couple of working days.'
             : 'Send the message your mail client just opened and we’ll come back to you within a couple of working days.'}
         </p>
@@ -162,20 +124,13 @@ export default function ContactForm({ className }: { className?: string }) {
       </div>
 
       {/* Honeypot — hidden from people, tempting to bots. */}
-      <input
-        type="text"
-        name="website"
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
-        className="absolute h-0 w-0 overflow-hidden opacity-0"
-      />
+      <input {...honeypotProps} />
 
       {status === 'error' && (
         <p role="alert" className="mt-5 text-sm text-red-600 dark:text-red-400">
           That didn’t send. Email us directly at{' '}
-          <a className="underline underline-offset-4" href={`mailto:${contacts[0].email}`}>
-            {contacts[0].email}
+          <a className="underline underline-offset-4" href={`mailto:${fallbackEmail}`}>
+            {fallbackEmail}
           </a>
           .
         </p>

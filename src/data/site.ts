@@ -20,10 +20,14 @@ export type ImpactStat = {
  * deciding the organization is real.
  *
  * ────────────────────────────────────────────────────────────────────────────
- * TO TURN THIS ON: replace each `value: null` with a real figure.
- * The strip stays hidden until every stat has one — a null is treated as
- * "we don't know this yet", and an unverified number on the home page costs
- * more credibility than a missing section does.
+ * TO TURN THIS ON: replace any `value: null` with a real figure.
+ *
+ * A null means "we don't know this yet" and that stat is simply left out — you
+ * don't need all four to ship. The strip appears once at least two have values
+ * and stays hidden below that, since a lone number reads as an orphan.
+ *
+ * Never fill one in to make the grid look even. An unverified number on the
+ * home page costs more credibility than a missing section does.
  * ────────────────────────────────────────────────────────────────────────────
  */
 export const impactStats: ImpactStat[] = [
@@ -32,6 +36,30 @@ export const impactStats: ImpactStat[] = [
   { value: null, label: 'Members participating', note: 'People tracking actions with us' },
   { value: null, label: 'Saved on energy bills', note: 'Typical member savings to date' },
 ]
+
+export type Testimonial = {
+  quote: string
+  /** Who said it. Required — an unattributed quote is decoration, not evidence. */
+  name: string
+  /** Their role at the organization. */
+  role: string
+  /** The organization. This is the part that does the persuading. */
+  org: string
+}
+
+/**
+ * Named participants vouching for the work.
+ *
+ * ────────────────────────────────────────────────────────────────────────────
+ * TO TURN THIS ON: add entries. The home page section renders nothing while the
+ * array is empty, so the code ships inert.
+ *
+ * Every field is required on purpose. "A community organizer" persuades nobody;
+ * one real name attached to one real organization is worth more than a page of
+ * copy. Only add quotes you have permission to publish.
+ * ────────────────────────────────────────────────────────────────────────────
+ */
+export const testimonials: Testimonial[] = []
 
 export const contacts = [
   {
