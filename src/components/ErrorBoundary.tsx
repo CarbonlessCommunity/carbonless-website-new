@@ -28,7 +28,7 @@ export default class ErrorBoundary extends Component<
     return (
       <Section className="py-28">
         <Container size="narrow" className="text-center">
-          <p className="font-display text-6xl font-semibold text-forest-300 dark:text-forest-700">
+          <p className="font-display text-6xl font-semibold text-forest-300">
             Oops
           </p>
           <h1 className="font-display mt-6 text-3xl font-semibold text-[var(--ink)]">

@@ -81,14 +81,14 @@ export default function SubscribeForm({
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="inline-flex shrink-0 items-center justify-center rounded-full bg-forest-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-forest-800 hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-forest-500 dark:text-forest-950 dark:hover:bg-forest-400"
+          className="inline-flex shrink-0 items-center justify-center rounded-full bg-forest-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-forest-800 hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {status === 'submitting' ? 'Adding…' : 'Subscribe'}
         </button>
       </div>
 
       {status === 'error' && (
-        <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="mt-3 text-sm text-red-600">
           That didn’t send. Email us at{' '}
           <a className="underline underline-offset-4" href={`mailto:${fallbackEmail}`}>
             {fallbackEmail}

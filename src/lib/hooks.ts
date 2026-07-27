@@ -1,29 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useLocation } from 'react-router'
 import { loadAnalytics, trackPageView } from './analytics'
-
-const STORAGE_KEY = 'cc-theme'
-
-export type Theme = 'light' | 'dark'
-
-function initialTheme(): Theme {
-  // Runs during render, which the prerender step does in Node — no `window` there.
-  if (typeof window === 'undefined') return 'light'
-  const stored = localStorage.getItem(STORAGE_KEY)
-  if (stored === 'light' || stored === 'dark') return stored
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-}
-
-export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(initialTheme)
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-    localStorage.setItem(STORAGE_KEY, theme)
-  }, [theme])
-
-  return { theme, toggle: () => setTheme((t) => (t === 'dark' ? 'light' : 'dark')) }
-}
 
 /** Sets document.title and the meta description for the current page. */
 export function usePageMeta(title: string, description?: string) {

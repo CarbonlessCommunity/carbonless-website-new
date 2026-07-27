@@ -69,7 +69,7 @@ export default function CommunitiesIndex() {
             {reasons.map((r, i) => (
               <Reveal key={r.title} delay={i * 90}>
                 <div className="h-full rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-8">
-                  <p className="font-display text-3xl font-semibold text-forest-300 dark:text-forest-700">
+                  <p className="font-display text-3xl font-semibold text-forest-300">
                     {String(i + 1).padStart(2, '0')}
                   </p>
                   <h3 className="font-display mt-4 text-xl font-semibold text-[var(--ink)]">

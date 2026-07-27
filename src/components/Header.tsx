@@ -3,36 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
 import { nav, site } from '@/data/site'
 import { Container, cx } from './ui'
-import { useTheme } from '@/lib/hooks'
 import { useFocusTrap } from '@/lib/useFocusTrap'
-
-function ThemeToggle({ overHero }: { overHero?: boolean }) {
-  const { theme, toggle } = useTheme()
-  return (
-    <button
-      type="button"
-      onClick={toggle}
-      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-      className={cx(
-        'grid h-9 w-9 place-items-center rounded-full border transition-colors',
-        overHero
-          ? 'border-white/25 text-white/80 hover:border-white/50 hover:text-white'
-          : 'border-[var(--line)] text-[var(--ink-muted)] hover:border-forest-400 hover:text-forest-600 dark:hover:text-forest-300',
-      )}
-    >
-      {theme === 'dark' ? (
-        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-        </svg>
-      ) : (
-        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
-        </svg>
-      )}
-    </button>
-  )
-}
 
 /**
  * Roving focus for the desktop dropdowns.
@@ -85,7 +56,7 @@ export default function Header() {
   const location = useLocation()
 
   // The trap covers the whole header rather than just the sheet, so the close
-  // button and theme toggle in the bar stay keyboard-reachable while it's open.
+  // button in the bar stays keyboard-reachable while it's open.
   const headerRef = useRef<HTMLElement>(null)
   useFocusTrap(headerRef, mobileOpen)
 
@@ -120,11 +91,11 @@ export default function Header() {
   }, [])
 
   // The home hero runs under the header, so at the top of that page the bar
-  // sits on dark artwork and has to invert regardless of the active theme.
+  // sits on dark artwork and has to invert to stay legible.
   const overHero = location.pathname === '/' && !scrolled && !mobileOpen
 
   const idle = overHero ? 'text-white/75 hover:text-white' : 'text-[var(--ink-muted)] hover:text-[var(--ink)]'
-  const active = overHero ? 'text-white' : 'text-forest-700 dark:text-forest-300'
+  const active = overHero ? 'text-white' : 'text-forest-700'
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     cx('rounded-full px-3 py-2 text-sm font-medium transition-colors', isActive ? active : idle)
@@ -153,7 +124,7 @@ export default function Header() {
               <span
                 className={cx(
                   'block text-[0.72rem] font-medium tracking-[0.16em] uppercase',
-                  overHero ? 'text-forest-300' : 'text-forest-600 dark:text-forest-400',
+                  overHero ? 'text-forest-300' : 'text-forest-600',
                 )}
               >
                 Community
@@ -226,7 +197,7 @@ export default function Header() {
                         role="menu"
                         aria-label={item.label}
                         onKeyDown={(e) => handleMenuKeys(e, item.label)}
-                        className="reveal-in grid gap-0.5 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-2 shadow-xl shadow-forest-950/10 dark:shadow-black/40"
+                        className="reveal-in grid gap-0.5 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-2 shadow-xl shadow-forest-950/10"
                       >
                         {item.children.map((child) => (
                           <Link
@@ -259,14 +230,13 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle overHero={overHero} />
             <Link
               to="/contact"
               className={cx(
                 'hidden rounded-full px-5 py-2.5 text-sm font-semibold transition-colors sm:inline-flex',
                 overHero
                   ? 'bg-white text-forest-900 hover:bg-forest-100'
-                  : 'bg-forest-700 text-white hover:bg-forest-800 dark:bg-forest-500 dark:text-forest-950 dark:hover:bg-forest-400',
+                  : 'bg-forest-700 text-white hover:bg-forest-800',
               )}
             >
               Get in touch
@@ -292,9 +262,9 @@ export default function Header() {
 
       {/* Mobile nav.
           role="dialog" without aria-modal on purpose: the bar above stays
-          deliberately reachable (it holds the close button and theme toggle),
-          and aria-modal would tell assistive tech that everything outside this
-          element — including those — is inert. */}
+          deliberately reachable (it holds the close button), and aria-modal
+          would tell assistive tech that everything outside this element —
+          including that button — is inert. */}
       {mobileOpen && (
         <div
           id="mobile-menu"
@@ -333,7 +303,7 @@ export default function Header() {
               ))}
               <Link
                 to="/contact"
-                className="mt-3 rounded-full bg-forest-700 px-5 py-3 text-center text-sm font-semibold text-white dark:bg-forest-500 dark:text-forest-950"
+                className="mt-3 rounded-full bg-forest-700 px-5 py-3 text-center text-sm font-semibold text-white"
               >
                 Get in touch
               </Link>

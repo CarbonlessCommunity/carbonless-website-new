@@ -42,7 +42,7 @@ export default function BlogPost() {
       <Container size="narrow">
         <Link
           to="/blog"
-          className="group inline-flex items-center gap-2 text-sm font-semibold text-forest-700 dark:text-forest-300"
+          className="group inline-flex items-center gap-2 text-sm font-semibold text-forest-700"
         >
           <Arrow className="rotate-180 group-hover:-translate-x-1" />
           All posts
@@ -81,7 +81,7 @@ export default function BlogPost() {
         {status === 'ready' && post && (
           <Reveal>
             <article className="mt-10">
-              <p className="text-xs font-semibold tracking-[0.16em] text-forest-600 uppercase dark:text-forest-300">
+              <p className="text-xs font-semibold tracking-[0.16em] text-forest-600 uppercase">
                 {formatDate(post.date)} · {readingTime(post.content)}
               </p>
               <h1 className="font-display mt-4 text-4xl leading-[1.1] font-semibold text-[var(--ink)] sm:text-5xl">

@@ -37,7 +37,7 @@ export default function Contact() {
                   <h2 className="font-display text-2xl font-semibold text-[var(--ink)]">
                     {c.name}
                   </h2>
-                  <p className="mt-1.5 text-sm font-medium text-forest-600 dark:text-forest-300">
+                  <p className="mt-1.5 text-sm font-medium text-forest-600">
                     {c.role}
                   </p>
                   <dl className="mt-8 space-y-5 text-sm">
@@ -48,7 +48,7 @@ export default function Contact() {
                       <dd className="mt-1.5">
                         <a
                           href={c.phoneHref}
-                          className="font-display text-xl text-[var(--ink)] transition-colors hover:text-forest-600 dark:hover:text-forest-300"
+                          className="font-display text-xl text-[var(--ink)] transition-colors hover:text-forest-600"
                         >
                           {c.phone}
                         </a>
@@ -61,7 +61,7 @@ export default function Contact() {
                       <dd className="mt-1.5">
                         <a
                           href={`mailto:${c.email}`}
-                          className="break-all text-[var(--ink)] transition-colors hover:text-forest-600 dark:hover:text-forest-300"
+                          className="break-all text-[var(--ink)] transition-colors hover:text-forest-600"
                         >
                           {c.email}
                         </a>

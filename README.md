@@ -72,14 +72,14 @@ src/
   components/    Layout, Header, Footer, PageHeader, SolutionPage, ui.tsx primitives
   lib/
     wordpress.ts   Blog API client + HTML sanitizer
-    hooks.ts       useTheme, usePageMeta, usePageViews
+    hooks.ts       usePageMeta, usePageViews
     asset.ts       Prefixes BASE_URL onto public/ paths — use for anything there
     analytics.ts   Cookieless Plausible, only loads when its env var is set
     schema.ts      JSON-LD builders, stamped into <head> at prerender time
     useFormspree.ts  Shared submit/state machine for the contact + subscribe forms
     prerenderData.ts Lets the build hand fetched blog posts to the Node render
   entry-server.tsx  Node render entry; also re-exports what prerender.mjs needs
-  index.css      The whole design system: @theme tokens, light/dark vars, .rich-text
+  index.css      The whole design system: @theme tokens, surface vars, .rich-text
 scripts/
   prerender.mjs   Per-route HTML, sitemap.xml, robots.txt
   check-build.mjs Asserts the above came out right
@@ -94,11 +94,13 @@ Copy edits shouldn't require touching components. Adding a solution means adding
 ### Design system
 
 `src/index.css` holds everything. Colours are the `forest` and `sand` ramps declared in
-`@theme`; light and dark values are paired as `--surface` / `--ink` / `--line` custom
-properties, so components reference `bg-[var(--surface)]` rather than `bg-white dark:bg-...`.
+`@theme`; surfaces and text are `--surface` / `--ink` / `--line` custom properties, so
+components reference `bg-[var(--surface)]` rather than hardcoding a colour.
 
-Dark mode is a `.dark` class on `<html>`, toggled by `useTheme` and persisted to
-`localStorage` under `cc-theme`; it defaults to the OS preference.
+The site is light-only. There was a dark theme with a header toggle; it was removed
+because it earned neither the maintenance nor the extra state. If it ever comes back,
+note that redefining those four custom properties under a selector is most of the job —
+that indirection is why almost nothing in the components hardcodes a colour.
 
 Section entrances use a CSS scroll timeline (`animation-timeline: view()`), not an
 IntersectionObserver. Content is visible by default and the animation is layered on top only

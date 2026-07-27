@@ -27,23 +27,6 @@
          once Vite has hashed them. -->
   </head>
   <body>
-    <script>
-      // Sets the theme class before first paint. `useTheme` applies it too, but
-      // only in an effect — after React has mounted and the browser has already
-      // painted a light page, which dark-mode visitors see as a white flash.
-      // Keep the storage key and the OS fallback identical to src/lib/hooks.ts.
-      ;(function () {
-        try {
-          var stored = localStorage.getItem('cc-theme')
-          var dark =
-            stored === 'dark' ||
-            (stored !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)
-          if (dark) document.documentElement.classList.add('dark')
-        } catch (e) {
-          /* private mode: fall through to the light default */
-        }
-      })()
-    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

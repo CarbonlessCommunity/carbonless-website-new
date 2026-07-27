@@ -161,7 +161,7 @@ export default function Home() {
               </div>
               <Link
                 to="/solutions"
-                className="group inline-flex items-center gap-2 text-sm font-semibold text-forest-700 dark:text-forest-300"
+                className="group inline-flex items-center gap-2 text-sm font-semibold text-forest-700"
               >
                 See all solutions
                 <Arrow />
@@ -188,7 +188,7 @@ export default function Home() {
                   <p className="mt-3 flex-1 text-sm leading-relaxed text-[var(--ink-muted)]">
                     {s.summary}
                   </p>
-                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-forest-700 dark:text-forest-300">
+                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-forest-700">
                     Learn more
                     <Arrow />
                   </span>
@@ -204,7 +204,7 @@ export default function Home() {
                 <Link
                   key={s.slug}
                   to={`/solutions/${s.slug}`}
-                  className="group flex items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-[var(--surface)] px-5 py-4 text-sm font-semibold text-[var(--ink)] transition-colors hover:border-forest-400 hover:text-forest-700 dark:hover:text-forest-300"
+                  className="group flex items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-[var(--surface)] px-5 py-4 text-sm font-semibold text-[var(--ink)] transition-colors hover:border-forest-400 hover:text-forest-700"
                 >
                   {s.name}
                   <Arrow className="shrink-0 opacity-50 group-hover:opacity-100" />

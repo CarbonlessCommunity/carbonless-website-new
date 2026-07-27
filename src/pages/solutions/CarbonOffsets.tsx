@@ -97,7 +97,7 @@ export default function CarbonOffsets() {
               <p>
                 <a
                   href={`mailto:${c.email}`}
-                  className="break-all text-forest-700 underline underline-offset-3 dark:text-forest-300"
+                  className="break-all text-forest-700 underline underline-offset-3"
                 >
                   {c.email}
                 </a>

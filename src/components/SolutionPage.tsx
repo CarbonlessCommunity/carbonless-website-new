@@ -84,7 +84,7 @@ export default function SolutionPage({
                 <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[var(--ink-muted)]">
                   {s.summary}
                 </p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-forest-700 dark:text-forest-300">
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-forest-700">
                   Learn more
                   <Arrow />
                 </span>

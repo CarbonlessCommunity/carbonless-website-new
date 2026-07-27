@@ -19,7 +19,7 @@ function PersonCard({ person }: { person: Person }) {
         <h3 className="font-display text-lg leading-snug font-semibold text-[var(--ink)]">
           {person.name}
         </h3>
-        <p className="mt-1 text-sm font-medium text-forest-600 dark:text-forest-300">
+        <p className="mt-1 text-sm font-medium text-forest-600">
           {person.role}
         </p>
         <ul className="mt-4 space-y-2 text-sm leading-relaxed text-[var(--ink-muted)]">

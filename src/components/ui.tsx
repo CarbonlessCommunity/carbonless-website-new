@@ -73,7 +73,7 @@ export function Reveal({
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="mb-4 text-xs font-semibold tracking-[0.18em] text-forest-600 uppercase dark:text-forest-300">
+    <p className="mb-4 text-xs font-semibold tracking-[0.18em] text-forest-600 uppercase">
       {children}
     </p>
   )
@@ -92,11 +92,11 @@ type ButtonProps = {
 const buttonStyles = {
   base: 'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 ease-[var(--ease-out-soft)] active:scale-[0.98]',
   primary:
-    'bg-forest-700 text-white shadow-sm hover:bg-forest-800 hover:shadow-md dark:bg-forest-500 dark:hover:bg-forest-400 dark:text-forest-950',
+    'bg-forest-700 text-white shadow-sm hover:bg-forest-800 hover:shadow-md',
   secondary:
-    'border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)] hover:border-forest-400 hover:bg-forest-50 dark:hover:bg-forest-900',
+    'border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)] hover:border-forest-400 hover:bg-forest-50',
   ghost:
-    'text-forest-700 hover:text-forest-900 dark:text-forest-300 dark:hover:text-forest-100 px-0',
+    'text-forest-700 hover:text-forest-900 px-0',
 }
 
 export function Button({
@@ -189,7 +189,7 @@ export function Quote({
     >
       <span
         aria-hidden="true"
-        className="font-display absolute top-2 left-6 text-7xl leading-none text-forest-300/50 select-none dark:text-forest-700/60"
+        className="font-display absolute top-2 left-6 text-7xl leading-none text-forest-300/50 select-none"
       >
         &ldquo;
       </span>

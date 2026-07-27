@@ -28,7 +28,7 @@ export default function XLHybrids() {
             key={item.label}
             className="rounded-2xl border border-[var(--line)] bg-[var(--surface-alt)] p-6 text-center"
           >
-            <p className="font-display text-3xl font-semibold text-forest-600 dark:text-forest-300">
+            <p className="font-display text-3xl font-semibold text-forest-600">
               {item.stat}
             </p>
             <p className="mt-2 text-sm text-[var(--ink-muted)]">{item.label}</p>

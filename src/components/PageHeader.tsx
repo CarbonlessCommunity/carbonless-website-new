@@ -19,7 +19,7 @@ export default function PageHeader({
       {/* Soft radial wash so the header reads as a distinct band */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 -right-32 h-[28rem] w-[28rem] rounded-full bg-forest-300/25 blur-3xl dark:bg-forest-700/20"
+        className="pointer-events-none absolute -top-40 -right-32 h-[28rem] w-[28rem] rounded-full bg-forest-300/25 blur-3xl"
       />
       <Container size="wide">
         <div className="reveal-in relative grid items-center gap-10 py-16 sm:py-20 lg:grid-cols-[1.5fr_1fr] lg:py-24">
@@ -40,7 +40,7 @@ export default function PageHeader({
               <img
                 src={image}
                 alt=""
-                className="w-full rounded-3xl border border-[var(--line)] bg-white object-contain p-6 shadow-lg shadow-forest-950/5 dark:bg-white/95"
+                className="w-full rounded-3xl border border-[var(--line)] bg-white object-contain p-6 shadow-lg shadow-forest-950/5"
               />
             </div>
           )}

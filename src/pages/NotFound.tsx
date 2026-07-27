@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <Section className="py-32">
       <Container size="narrow" className="text-center">
-        <p className="font-display text-7xl font-semibold text-forest-300 dark:text-forest-700">
+        <p className="font-display text-7xl font-semibold text-forest-300">
           404
         </p>
         <h1 className="font-display mt-6 text-3xl font-semibold text-[var(--ink)] sm:text-4xl">

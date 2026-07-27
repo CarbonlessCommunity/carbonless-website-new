@@ -11,7 +11,7 @@ function IssueRow({ issue }: { issue: Newsletter }) {
         href={issue.file}
         target="_blank"
         rel="noreferrer noopener"
-        className="group flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-5 transition-colors hover:text-forest-600 dark:hover:text-forest-300"
+        className="group flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-5 transition-colors hover:text-forest-600"
       >
         <span className="font-medium text-[var(--ink)] group-hover:text-inherit">
           {issue.title}
@@ -75,7 +75,7 @@ export default function Newsletters() {
                   href={current.file}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="text-sm font-semibold text-forest-700 underline underline-offset-4 dark:text-forest-300"
+                  className="text-sm font-semibold text-forest-700 underline underline-offset-4"
                 >
                   Download PDF ↗
                 </a>
@@ -102,7 +102,7 @@ export default function Newsletters() {
                     </p>
                     <a
                       href={current.file}
-                      className="mt-4 inline-block font-semibold text-forest-700 underline underline-offset-4 dark:text-forest-300"
+                      className="mt-4 inline-block font-semibold text-forest-700 underline underline-offset-4"
                     >
                       Download the {current.title} newsletter
                     </a>

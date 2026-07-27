@@ -52,7 +52,7 @@ export default function Footer() {
                       <li key={child.to + child.label}>
                         <Link
                           to={child.to}
-                          className="text-sm text-[var(--ink-muted)] transition-colors hover:text-forest-600 dark:hover:text-forest-300"
+                          className="text-sm text-[var(--ink-muted)] transition-colors hover:text-forest-600"
                         >
                           {child.label}
                         </Link>
@@ -62,7 +62,7 @@ export default function Footer() {
                     <li>
                       <Link
                         to={group.to!}
-                        className="text-sm text-[var(--ink-muted)] transition-colors hover:text-forest-600 dark:hover:text-forest-300"
+                        className="text-sm text-[var(--ink-muted)] transition-colors hover:text-forest-600"
                       >
                         Our story
                       </Link>
@@ -72,7 +72,7 @@ export default function Footer() {
                     <li>
                       <Link
                         to="/contact"
-                        className="text-sm text-[var(--ink-muted)] transition-colors hover:text-forest-600 dark:hover:text-forest-300"
+                        className="text-sm text-[var(--ink-muted)] transition-colors hover:text-forest-600"
                       >
                         Contact
                       </Link>
@@ -96,7 +96,7 @@ export default function Footer() {
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="self-start transition-colors hover:text-forest-600 sm:self-auto dark:hover:text-forest-300"
+            className="self-start transition-colors hover:text-forest-600 sm:self-auto"
           >
             Back to top ↑
           </button>

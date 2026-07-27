@@ -28,7 +28,8 @@ export default function SolutionsIndex() {
                   className="group flex h-full flex-col rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-8 transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-forest-400 hover:shadow-xl hover:shadow-forest-950/8"
                 >
                   {/* Partner logos are a mix of transparent and white-matted
-                      files — the plate keeps them legible in dark mode. */}
+                      files. The plate matches the card today, but it pins the
+                      backdrop the matted ones need if --surface ever moves. */}
                   <div className="mb-7 flex h-14 w-fit items-center rounded-xl bg-white px-3">
                     <img
                       src={s.logo ?? s.image}
@@ -41,7 +42,7 @@ export default function SolutionsIndex() {
                     {s.name}
                   </h2>
                   <p className="mt-3 flex-1 leading-relaxed text-[var(--ink-muted)]">{s.summary}</p>
-                  <span className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-forest-700 dark:text-forest-300">
+                  <span className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-forest-700">
                     Learn more
                     <Arrow />
                   </span>

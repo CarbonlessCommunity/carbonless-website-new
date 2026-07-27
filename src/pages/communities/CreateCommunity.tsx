@@ -23,7 +23,7 @@ export default function CreateCommunity() {
         <Container size="narrow">
           <Reveal>
             <div className="flex flex-wrap items-center gap-6 rounded-3xl border border-[var(--line)] bg-[var(--surface-alt)] p-8 sm:p-10">
-              <p className="font-display text-6xl font-semibold text-forest-600 dark:text-forest-300">
+              <p className="font-display text-6xl font-semibold text-forest-600">
                 100
               </p>
               <p className="flex-1 leading-relaxed text-[var(--ink-muted)]">
