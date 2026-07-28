@@ -1,5 +1,21 @@
 import { asset } from '@/lib/asset'
 
+/**
+ * How hard we push a measure.
+ *
+ * `focus` is what the practice is actually built around and what the home page,
+ * the nav and the outreach lead with. `available` is real, still offered, and
+ * arranged for anyone who asks — but not what we spend the week on.
+ *
+ * The distinction is deliberate rather than cosmetic. Retail electricity and gas
+ * brokering has almost no barrier to entry, which means the way to grow it is to
+ * cold-call buyers who are already being called by a dozen brokers with a
+ * relationship and a lower number. Rooftop PV lost enough of its tax treatment
+ * in 2025 that the pool of good fits shrank with it. Both are still here for
+ * clients who want them; neither is worth building a business around.
+ */
+export type Tier = 'focus' | 'available'
+
 export type Solution = {
   slug: string
   name: string
@@ -7,12 +23,13 @@ export type Solution = {
   summary: string
   /** Long-form intro shown under the page title */
   lede: string
-  image: string
+  /** Optional: pages and cards fall back to a typographic plate without it. */
+  image?: string
   /** Logo shown on the solutions index; falls back to `image` */
   logo?: string
   externalUrl?: string
   externalLabel?: string
-  featured?: boolean
+  tier: Tier
 }
 
 export const solutions: Solution[] = [
@@ -20,12 +37,20 @@ export const solutions: Solution[] = [
     slug: 'carbon-offsets',
     name: 'Carbon Offsets',
     summary:
-      'Carbonless Community and UCapture have joined forces to bring a portfolio of carbon offset options to corporations and institutions.',
-    lede: 'If chosen correctly, carbon offsets can be an effective way to mitigate your carbon footprint. But not all offsets are equal.',
+      'Projects that avoid, reduce or remove greenhouse gases — each one vetted, named, and sold with the objection to it stated up front.',
+    lede: 'There is no way to get a footprint to zero today without some kind of offsetting instrument. The question is whether the one you buy changes anything.',
     image: asset('/images/ucapture.webp'),
     externalUrl: 'https://www.ucapture.com/projects',
     externalLabel: 'Browse UCapture projects',
-    featured: true,
+    tier: 'focus',
+  },
+  {
+    slug: 'batteries',
+    name: 'Battery Storage',
+    summary:
+      'Storage behind the meter for backup power, demand charge management and frequency response — the one hardware measure whose economics still stand on their own.',
+    lede: 'Batteries earn their keep in more than one way at once, which is why they survived the change in tax treatment that rooftop solar did not.',
+    tier: 'focus',
   },
   {
     slug: 'community-solar',
@@ -37,7 +62,7 @@ export const solutions: Solution[] = [
     logo: asset('/images/nexamp_logo.webp'),
     externalUrl: 'http://www.ilsolar.us',
     externalLabel: 'Sign up at ilsolar.us',
-    featured: true,
+    tier: 'available',
   },
   {
     slug: 'reverse-auction',
@@ -49,7 +74,7 @@ export const solutions: Solution[] = [
     logo: asset('/images/satori.webp'),
     externalUrl: 'https://www.satorienergy.com/energy-solutions/auction/',
     externalLabel: 'Satori Energy',
-    featured: true,
+    tier: 'available',
   },
   {
     slug: 'energy-star',
@@ -59,6 +84,7 @@ export const solutions: Solution[] = [
     lede: 'When it comes time to buy a new appliance, it makes sense to purchase an Energy Star rated one.',
     image: asset('/images/image5-1920.webp'),
     logo: asset('/images/energy-star-logo.webp'),
+    tier: 'available',
   },
   {
     slug: 'efficient-cars',
@@ -67,6 +93,7 @@ export const solutions: Solution[] = [
       'A listing of suggested fuel-efficient cars — all of which burn significantly less fuel than the current CAFE standard.',
     lede: 'Why not buy a car that will not only save money on fuel, but also reduce future carbon emissions?',
     image: asset('/images/go-green-transportation-car.webp'),
+    tier: 'available',
   },
   {
     slug: 'enerfusion',
@@ -78,6 +105,7 @@ export const solutions: Solution[] = [
     logo: asset('/images/enerfusion-logo.webp'),
     externalUrl: 'http://www.enerfusioninc.com',
     externalLabel: 'enerfusioninc.com',
+    tier: 'available',
   },
   {
     slug: 'xl-hybrids',
@@ -87,6 +115,7 @@ export const solutions: Solution[] = [
     lede: 'Cut fuel costs, reduce exposure to fuel price fluctuations, and reduce emissions. Why wait?',
     image: asset('/images/XLPage-1200.webp'),
     logo: asset('/images/XLlogo.webp'),
+    tier: 'available',
   },
   {
     slug: 'qcoefficient',
@@ -97,16 +126,11 @@ export const solutions: Solution[] = [
     image: asset('/images/qlogoBlue.webp'),
     // qlogo.png is the white knockout — unusable on the white logo plate
     logo: asset('/images/qlogoBlue.webp'),
+    tier: 'available',
   },
 ]
 
-export const offsetProjects = [
-  { image: asset('/images/offsets1.webp'), url: 'https://www.ucapture.com/projects/rwanda', name: 'Rwanda' },
-  { image: asset('/images/offsets2.webp'), url: 'https://www.ucapture.com/projects/isangi', name: 'Isangi' },
-  { image: asset('/images/offsets3.webp'), url: 'https://www.ucapture.com/projects/bearcreek', name: 'Bear Creek' },
-  { image: asset('/images/offsets4.webp'), url: 'https://www.ucapture.com/projects/southkent', name: 'South Kent' },
-  { image: asset('/images/offsets5.webp'), url: 'https://www.ucapture.com/projects/khonburi', name: 'Khon Buri' },
-  { image: asset('/images/offsets6.webp'), url: 'https://www.ucapture.com/projects/seneca', name: 'Seneca' },
-]
+export const focusSolutions = solutions.filter((s) => s.tier === 'focus')
+export const otherSolutions = solutions.filter((s) => s.tier !== 'focus')
 
 export const getSolution = (slug: string) => solutions.find((s) => s.slug === slug)

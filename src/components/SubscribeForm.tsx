@@ -28,8 +28,8 @@ export default function SubscribeForm({
   const emailId = useId()
   const { status, handleSubmit, isConfigured, fallbackEmail } = useFormspree({
     formId: NEWSLETTER_ID,
-    mailSubject: 'Newsletter signup',
-    mailBody: (data) => `Please add ${data.get('email')} to the newsletter list.`,
+    mailSubject: 'Project of the Month signup',
+    mailBody: (data) => `Please add ${data.get('email')} to the Project of the Month list.`,
   })
 
   if (status === 'success') {
@@ -49,7 +49,7 @@ export default function SubscribeForm({
     <form onSubmit={handleSubmit} className={className}>
       {variant === 'default' && (
         <h2 className="font-display text-2xl font-semibold text-[var(--ink)]">
-          Occasional updates
+          Project of the Month
         </h2>
       )}
       <p
@@ -58,7 +58,7 @@ export default function SubscribeForm({
           variant === 'default' && 'mt-2',
         )}
       >
-        What we’re seeing in energy markets and efficiency. No more than monthly.
+        One carbon offset project, written up in full, once a month. Nothing else.
       </p>
 
       <div className="mt-4 flex flex-wrap gap-3">

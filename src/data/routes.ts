@@ -1,4 +1,5 @@
 import { solutions } from './solutions'
+import { formatMonth, projectsOfTheMonth } from './projects'
 
 /**
  * Every crawlable route, with the title and description that page sets at
@@ -46,7 +47,8 @@ const staticRoutes: RouteMeta[] = [
   {
     path: '/about',
     title: 'About Us',
-    description: 'The mission of Carbonless Community and the people behind it.',
+    description:
+      'Why Carbonless Community builds on carbon offsets and battery storage — and what it stepped back from.',
     priority: 0.8,
   },
   {
@@ -56,11 +58,25 @@ const staticRoutes: RouteMeta[] = [
     priority: 0.9,
   },
   {
-    path: '/solutions',
-    title: 'Solutions',
+    path: '/recs-vs-offsets',
+    title: 'RECs vs. Carbon Offsets',
     description:
-      'Carbon offsets, community solar, reverse energy auctions, efficient appliances and vehicles — the measures we help organizations put in place.',
+      'A Renewable Energy Certificate never has to prove it changed anything. A carbon offset does. The difference, point by point, and what it means for a net-zero claim.',
+    priority: 0.95,
+  },
+  {
+    path: '/project-of-the-month',
+    title: 'Project of the Month',
+    description:
+      'One carbon offset project every month — what it does, why the tonnes are additional, and the fair objection to it.',
     priority: 0.9,
+  },
+  {
+    path: '/solutions',
+    title: 'Other Measures',
+    description:
+      'Community solar, reverse energy auctions, efficient appliances, fleet conversions and building controls — measures we still arrange for clients who want them.',
+    priority: 0.6,
   },
   {
     path: '/communities',
@@ -118,7 +134,24 @@ const solutionRoutes: RouteMeta[] = solutions.map((s) => ({
   path: `/solutions/${s.slug}`,
   title: s.name,
   description: s.summary,
+  // The two measures the practice is built around are worth more to a crawler
+  // than the six we merely keep on the shelf.
+  priority: s.tier === 'focus' ? 0.9 : 0.5,
+}))
+
+/**
+ * One route per published project. Adding an entry to `data/projects.ts` is
+ * therefore enough to give it a prerendered page, a sitemap entry and a link
+ * preview — the monthly cadence can't be held up by a routing chore.
+ *
+ * The title carries the month because `scripts/check-build.mjs` requires every
+ * page's <title> to be unique, and a project could plausibly be revisited.
+ */
+const projectRoutes: RouteMeta[] = projectsOfTheMonth.map((p) => ({
+  path: `/project-of-the-month/${p.slug}`,
+  title: `${p.name} — ${formatMonth(p.month)}`,
+  description: p.summary,
   priority: 0.7,
 }))
 
-export const routes: RouteMeta[] = [...staticRoutes, ...solutionRoutes]
+export const routes: RouteMeta[] = [...staticRoutes, ...solutionRoutes, ...projectRoutes]

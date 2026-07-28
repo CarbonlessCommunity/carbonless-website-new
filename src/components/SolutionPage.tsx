@@ -22,13 +22,18 @@ export default function SolutionPage({
   const solution = getSolution(slug)!
   usePageMeta(solution.name, solution.summary)
 
-  const others = solutions.filter((s) => s.slug !== slug).slice(0, 3)
+  // Focus measures first: the rail is the one place a reader on a shelf page
+  // gets pointed back at what the practice actually does.
+  const others = solutions
+    .filter((s) => s.slug !== slug)
+    .sort((a, b) => Number(b.tier === 'focus') - Number(a.tier === 'focus'))
+    .slice(0, 3)
   const headerImage = heroImage === null ? undefined : (heroImage ?? solution.logo ?? solution.image)
 
   return (
     <>
       <PageHeader
-        eyebrow="Solutions"
+        eyebrow={solution.tier === 'focus' ? 'What we do' : 'Also available'}
         title={solution.name}
         lede={solution.lede}
         image={headerImage}
@@ -60,8 +65,8 @@ export default function SolutionPage({
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button to="/contact">Talk to us</Button>
-              <Button to="/communities/create" variant="secondary">
-                Start a community
+              <Button to="/project-of-the-month" variant="secondary">
+                Project of the Month
               </Button>
             </div>
           </div>

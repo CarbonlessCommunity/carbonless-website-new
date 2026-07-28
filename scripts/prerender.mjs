@@ -123,7 +123,7 @@ function buildPage({ path: routePath, title, description, markup, draft = false,
   // gets the same "<page> — Carbonless Community" shape `usePageMeta` produces.
   const fullTitle =
     routePath === '/'
-      ? 'Carbonless Community — Reduce your carbon footprint, together'
+      ? 'Carbonless Community — Carbon offsets that have to prove something'
       : `${title} — Carbonless Community`
   const canonical = `${SITE_URL}${routePath === '/' ? '/' : routePath}`
 

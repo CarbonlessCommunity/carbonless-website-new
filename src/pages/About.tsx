@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router'
 import PageHeader from '@/components/PageHeader'
 import { Button, Container, Eyebrow, Quote, Reveal, Section, cx } from '@/components/ui'
 import { people, type Person } from '@/data/people'
@@ -41,7 +42,7 @@ function PersonCard({ person }: { person: Person }) {
 export default function About() {
   usePageMeta(
     'About Us',
-    'The mission of Carbonless Community and the people behind it.',
+    'Why Carbonless Community builds on carbon offsets and battery storage — and what it stepped back from.',
   )
   const [showAlumni, setShowAlumni] = useState(false)
 
@@ -52,8 +53,8 @@ export default function About() {
     <>
       <PageHeader
         eyebrow="About us"
-        title="Reducing emissions shouldn’t be hard — or expensive"
-        lede="Reducing greenhouse gas emissions, most notably carbon dioxide, does not have to be difficult nor does it have to be costly."
+        title="We’d rather sell the harder thing"
+        lede="Carbonless Community has been helping organizations cut emissions since 2012. What we choose to spend our time on has narrowed since — deliberately."
       />
 
       <Section>
@@ -70,6 +71,39 @@ export default function About() {
                 Carbonless Community expands your organization’s activities to include specific
                 carbon avoidance measures taken by employees, staff, faculty, students and their
                 immediate and extended families.
+              </p>
+
+              <h2>What we choose to work on</h2>
+              <p>
+                Our association with Priority Power lets us offer a wide shelf: retail electricity
+                and gas, demand response, behind-the-meter solar and storage, Renewable Energy
+                Certificates, carbon offsets. We could sell any of it. We have decided to build the
+                practice on the two that are worth the week.
+              </p>
+              <p>
+                <strong>Carbon offsets</strong> come first, because they are the only instrument on
+                that list that has to prove it changed something —{' '}
+                <Link to="/recs-vs-offsets">a REC does not</Link> — and because almost nobody sells
+                them. They are harder work and thinner margin than commodity energy, which is
+                exactly why the field is empty and the buyers who care are underserved.{' '}
+                <strong>Battery storage</strong> comes second, as the one piece of hardware whose
+                economics still stand up on their own.
+              </p>
+              <p>
+                What we have stepped back from is just as deliberate. Brokering electricity and gas
+                has almost no barrier to entry, so growing it means cold-calling buyers who are
+                already fielding a dozen calls a week from brokers with a relationship and a lower
+                number. Rooftop solar lost enough of its federal tax treatment that the pool of
+                genuinely good fits shrank with it. Both remain{' '}
+                <Link to="/solutions">available to any client who wants them</Link>. Neither is what
+                we get up for.
+              </p>
+              <p>
+                To keep ourselves honest about the first of those, we publish a{' '}
+                <Link to="/project-of-the-month">Project of the Month</Link>: one offset project,
+                written up in full against a published checklist, including the fair objection to
+                it. A dated page that would visibly go stale is a more reliable discipline than good
+                intentions.
               </p>
             </div>
           </Reveal>

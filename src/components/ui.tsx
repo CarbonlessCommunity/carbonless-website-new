@@ -79,6 +79,52 @@ export function Eyebrow({ children }: { children: ReactNode }) {
   )
 }
 
+/**
+ * The white plate a partner logo sits on in a card.
+ *
+ * Partner artwork is a mix of transparent and white-matted files, so the plate
+ * pins the backdrop the matted ones need even if `--surface` moves. Measures we
+ * offer ourselves have no logo at all — those get initials in the same footprint
+ * rather than a gap, so a grid of cards keeps one baseline.
+ */
+export function LogoPlate({
+  src,
+  name,
+  className,
+}: {
+  src?: string
+  name: string
+  className?: string
+}) {
+  const initials = name
+    .split(/\s+/)
+    .map((word) => word[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('')
+
+  return (
+    <div
+      className={cx(
+        'flex w-fit items-center rounded-xl px-3',
+        src ? 'bg-white' : 'bg-forest-700/10',
+        className,
+      )}
+    >
+      {src ? (
+        <img src={src} alt="" className="max-h-10 max-w-[9rem] object-contain" loading="lazy" />
+      ) : (
+        <span
+          aria-hidden="true"
+          className="font-display px-1 text-lg font-semibold tracking-wide text-forest-700"
+        >
+          {initials}
+        </span>
+      )}
+    </div>
+  )
+}
+
 type ButtonProps = {
   children: ReactNode
   to?: string

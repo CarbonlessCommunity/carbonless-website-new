@@ -63,11 +63,13 @@ src/
   data/          Ported site content as typed records — edit here, not in JSX
     site.ts        Org details, contacts, impact stats, testimonials, nav tree
     people.ts      Team and alumni bios
-    solutions.ts   The 8 partner measures + UCapture offset projects
+    offsets.ts     The REC/offset comparison and the project vetting checklist
+    projects.ts    Project of the Month entries + the UCapture projects grid
+    solutions.ts   The 9 measures, each tiered `focus` or `available`
     newsletters.ts Newsletter issues (PDFs live in public/newsletters/)
     routes.ts      Every crawlable route's title/description/priority
   pages/         One file per route
-    solutions/     8 solution pages, all wrapping <SolutionPage>
+    solutions/     9 solution pages, all wrapping <SolutionPage>
     communities/
   components/    Layout, Header, Footer, PageHeader, SolutionPage, ui.tsx primitives
   lib/
@@ -90,6 +92,27 @@ scripts/
 Copy edits shouldn't require touching components. Adding a solution means adding a record to
 `solutions.ts`, a page under `pages/solutions/`, and a route — the cards, nav dropdown and
 "other measures" rail all read from the data file.
+
+### Publishing a Project of the Month
+
+The site's standing feature: one carbon offset project written up each month against the
+checklist in `data/offsets.ts`. To publish, add an entry to the **top** of `projectsOfTheMonth`
+in `src/data/projects.ts` — nothing else needs touching. The entry becomes this month's project
+on the home page and `/project-of-the-month`, pushes the previous one into the archive, and
+picks up its own URL, prerendered HTML, sitemap entry and link preview from `routes.ts`.
+
+Only `slug`, `month`, `name`, `location`, `category` and `summary` are required; every other
+section renders only when it's filled in. A worked example sits commented out at the bottom of
+that file, and `projects.test.ts` catches the mistakes worth catching (duplicate slug, malformed
+month, wrong position in the array, missing route).
+
+### What the site argues
+
+The positioning is deliberate and lives in three places that must not drift: `data/offsets.ts`
+holds the REC/offset comparison and the vetting criteria, `site.premise` holds the one-sentence
+version, and `/recs-vs-offsets` makes the case at length. Solutions are tiered — `focus`
+(carbon offsets, battery storage) leads the nav and the home page; `available` is everything
+still offered but no longer chased, collected at `/solutions`.
 
 ### Design system
 

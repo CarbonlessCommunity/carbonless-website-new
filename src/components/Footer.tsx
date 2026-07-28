@@ -40,7 +40,7 @@ export default function Footer() {
             </address>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {nav.map((group) => (
               <div key={group.label}>
                 <h3 className="font-sans text-xs font-semibold tracking-[0.16em] text-[var(--ink)] uppercase">

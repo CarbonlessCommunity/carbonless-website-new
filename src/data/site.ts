@@ -1,6 +1,12 @@
 export const site = {
   name: 'Carbonless Community',
-  tagline: 'Reducing your carbon footprint is easy — and can save you money.',
+  tagline: 'Carbon offsets chosen to survive the obvious question — and one project written up in full every month.',
+  /**
+   * The single sentence the whole site is arguing. Used wherever the case has to
+   * be made in one breath: the home hero, the offsets page, link previews.
+   */
+  premise:
+    'There is no way to get a carbon footprint to zero today without buying something. Most of what gets bought is a Renewable Energy Certificate, and a REC never has to prove it changed anything.',
   definition:
     '… a collection of individuals sharing common characteristics or interests, distinct from the larger society, working cooperatively to reduce greenhouse gas emissions, thereby reducing the impact on our planet.',
   blogUrl: 'https://carbonlesscommunity.wordpress.com/',
@@ -81,51 +87,42 @@ export const contacts = [
 export type NavChild = { label: string; to: string; blurb?: string }
 export type NavItem = { label: string; to?: string; children?: NavChild[] }
 
+/**
+ * The nav is the clearest statement of what the practice is for, which is why
+ * the eight measures that used to sit flat under "Solutions" no longer do. Two
+ * of them are the work; the rest are still offered, one click deeper, under
+ * "Other measures".
+ */
 export const nav: NavItem[] = [
   { label: 'About', to: '/about' },
   {
-    label: 'Solutions',
-    to: '/solutions',
+    label: 'Carbon Offsets',
+    to: '/solutions/carbon-offsets',
     children: [
       {
         label: 'Carbon Offsets',
         to: '/solutions/carbon-offsets',
-        blurb: 'Verified projects with UCapture — Scope 1, 2 and 3.',
+        blurb: 'What they are, how we choose them, what we refuse.',
       },
       {
-        label: 'Community Solar',
-        to: '/solutions/community-solar',
-        blurb: 'Save up to 20% with Nexamp — no rooftop panels needed.',
+        label: 'RECs vs. Carbon Offsets',
+        to: '/recs-vs-offsets',
+        blurb: 'The cheaper instrument, and what it does not do.',
       },
       {
-        label: 'Reverse Energy Auction',
-        to: '/solutions/reverse-auction',
-        blurb: 'Drive down the cost of green energy procurement.',
+        label: 'Project of the Month',
+        to: '/project-of-the-month',
+        blurb: 'One project, written up in full, every month.',
       },
       {
-        label: 'Energy Star Appliances',
-        to: '/solutions/energy-star',
-        blurb: 'The simplest way to cut a household footprint.',
+        label: 'Battery Storage',
+        to: '/solutions/batteries',
+        blurb: 'Backup power, demand charges, frequency response.',
       },
       {
-        label: 'Energy Efficient Cars',
-        to: '/solutions/efficient-cars',
-        blurb: 'Vehicles that beat the current CAFE standard.',
-      },
-      {
-        label: 'EnerFusion',
-        to: '/solutions/enerfusion',
-        blurb: 'Solar PV charging tables. Go on, plug in green.',
-      },
-      {
-        label: 'XL Hybrids',
-        to: '/solutions/xl-hybrids',
-        blurb: '20% less CO₂ from Class 2–4 fleet vehicles.',
-      },
-      {
-        label: 'QCoefficient',
-        to: '/solutions/qcoefficient',
-        blurb: 'Use your building’s thermal mass to cut price risk.',
+        label: 'Other measures',
+        to: '/solutions',
+        blurb: 'Community solar, auctions, fleets, appliances.',
       },
     ],
   },

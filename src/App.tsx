@@ -3,8 +3,12 @@ import Layout from '@/components/Layout'
 import Home from '@/pages/Home'
 import About from '@/pages/About'
 import Contact from '@/pages/Contact'
+import RecsVsOffsets from '@/pages/RecsVsOffsets'
+import ProjectOfTheMonth from '@/pages/ProjectOfTheMonth'
+import ProjectDetail from '@/pages/ProjectDetail'
 import SolutionsIndex from '@/pages/solutions/SolutionsIndex'
 import CarbonOffsets from '@/pages/solutions/CarbonOffsets'
+import Batteries from '@/pages/solutions/Batteries'
 import CommunitySolar from '@/pages/solutions/CommunitySolar'
 import ReverseAuction from '@/pages/solutions/ReverseAuction'
 import EnergyStar from '@/pages/solutions/EnergyStar'
@@ -30,9 +34,17 @@ export default function App() {
         <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
 
+        <Route path="recs-vs-offsets" element={<RecsVsOffsets />} />
+
+        <Route path="project-of-the-month">
+          <Route index element={<ProjectOfTheMonth />} />
+          <Route path=":slug" element={<ProjectDetail />} />
+        </Route>
+
         <Route path="solutions">
           <Route index element={<SolutionsIndex />} />
           <Route path="carbon-offsets" element={<CarbonOffsets />} />
+          <Route path="batteries" element={<Batteries />} />
           <Route path="community-solar" element={<CommunitySolar />} />
           <Route path="reverse-auction" element={<ReverseAuction />} />
           <Route path="energy-star" element={<EnergyStar />} />
