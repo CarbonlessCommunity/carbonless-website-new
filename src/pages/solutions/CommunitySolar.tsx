@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import { asset } from '@/lib/asset'
 import SolutionPage from '@/components/SolutionPage'
 
@@ -101,12 +102,14 @@ export default function CommunitySolar() {
       <div className="mt-12 grid gap-4 sm:grid-cols-2">
         <img
           src={asset('/images/Nexamp_1.webp')}
+          {...imageSize(asset('/images/Nexamp_1.webp'))}
           alt="Nexamp community solar"
           className="w-full rounded-2xl border border-[var(--line)] object-cover"
           loading="lazy"
         />
         <img
           src={asset('/images/Nexamp_2.webp')}
+          {...imageSize(asset('/images/Nexamp_2.webp'))}
           alt="Nexamp community solar"
           className="w-full rounded-2xl border border-[var(--line)] object-cover"
           loading="lazy"

@@ -29,7 +29,7 @@ npm run dev
 | `npm run build` | Typecheck, bundle to `dist/`, build the SSR entry, then prerender every route (see below) |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | oxlint |
-| `npm test` | Vitest — covers the blog HTML sanitizer |
+| `npm test` | Vitest — covers the blog HTML sanitizer and the image-dimension table |
 
 ### What `npm run build` actually does
 
@@ -76,10 +76,11 @@ src/
     wordpress.ts   Blog API client + HTML sanitizer
     hooks.ts       usePageMeta, usePageViews
     asset.ts       Prefixes BASE_URL onto public/ paths — use for anything there
+    imageSize.ts   Intrinsic w/h for every public/images file — spread onto <img>
     analytics.ts   Cookieless Plausible, only loads when its env var is set
     schema.ts      JSON-LD builders, stamped into <head> at prerender time
     useFormspree.ts  Shared submit/state machine for the contact + subscribe forms
-    prerenderData.ts Lets the build hand fetched blog posts to the Node render
+    prerenderData.ts Hands fetched blog posts to the Node render, and to the browser
   entry-server.tsx  Node render entry; also re-exports what prerender.mjs needs
   index.css      The whole design system: @theme tokens, surface vars, .rich-text
 scripts/
@@ -143,6 +144,26 @@ so it can be called straight from the browser. Post bodies are run through `sani
 strips `script`/`iframe`/`object`/`form` elements, `on*` handlers and `javascript:` URLs — before
 they reach `dangerouslySetInnerHTML`. **Keep that in place**; the API returns whatever HTML is
 authored in WordPress.
+
+Blog pages are stale-while-revalidate. The prerenderer bakes the posts into the HTML *and*
+writes them to `window.__PRERENDER__`, which `lib/prerenderData.ts` reads on load; the pages
+then refetch in the background so a post published on WordPress still appears without a
+redeploy. The seed matters because `main.tsx` mounts with `createRoot`, not `hydrateRoot` —
+React renders from its own state and ignores the prerendered markup, so with nothing seeding
+that state a reader watched the post they were already reading blank out to a skeleton. A
+revalidation that fails now leaves the seeded content alone instead of replacing it with an
+error panel.
+
+### Images
+
+Anything in `public/images/` should carry `{...imageSize(src)}` alongside its `src`, so the
+browser can reserve the right box before the file arrives. Without it a 900×424 image in a
+640px column reserves 2px of height instead of 303 and everything below it jumps on load.
+`lib/imageSize.ts` is the table; `imageSize.test.ts` parses the real file headers and fails if
+the two drift, so add the entry when you add the image and let CI confirm the numbers.
+
+WordPress featured images are remote and have no entry — `imageSize` contributes nothing for
+them, and the blog post hero pins an `aspect-16/9` box instead.
 
 ## Deploying
 

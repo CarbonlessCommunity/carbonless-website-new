@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import { asset } from '@/lib/asset'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
@@ -28,8 +29,8 @@ export default function Blog() {
     'Information on all sides of the energy and environment discussions.',
   )
 
-  // Populated during the build-time prerender; empty in the browser, where the
-  // effect below fetches as usual.
+  // Baked in by the build-time prerender and handed to the browser through
+  // window.__PRERENDER__, so this is populated in both.
   const prerendered = getPrerenderData().posts
   const [posts, setPosts] = useState<Post[]>(prerendered ?? [])
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>(
@@ -38,17 +39,22 @@ export default function Blog() {
 
   useEffect(() => {
     let active = true
+    // Refetched even when seeded: posts are published on WordPress, so a list
+    // frozen at deploy time would never show a new one. The seed only decides
+    // what the reader looks at meanwhile.
     fetchPosts()
       .then((data) => {
         if (!active) return
         setPosts(data)
         setStatus('ready')
       })
-      .catch(() => active && setStatus('error'))
+      // Falling back to an error panel would throw away a list we can still
+      // show; only a cold load has nothing to fall back to.
+      .catch(() => active && !prerendered?.length && setStatus('error'))
     return () => {
       active = false
     }
-  }, [])
+  }, [prerendered])
 
   const [lead, ...rest] = posts
 
@@ -118,6 +124,7 @@ export default function Blog() {
                     ) : (
                       <img
                         src={asset('/images/image6-960.webp')}
+                        {...imageSize(asset('/images/image6-960.webp'))}
                         alt=""
                         className="h-full w-full object-cover opacity-70 transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-105"
                       />

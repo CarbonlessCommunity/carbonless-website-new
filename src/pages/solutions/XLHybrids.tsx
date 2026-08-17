@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import { asset } from '@/lib/asset'
 import SolutionPage from '@/components/SolutionPage'
 
@@ -39,6 +40,7 @@ export default function XLHybrids() {
       <img
         src={asset('/images/XLPage-1200.webp')}
         srcSet={`${asset('/images/XLPage-600.webp')} 600w, ${asset('/images/XLPage-1200.webp')} 1200w`}
+        {...imageSize(asset('/images/XLPage-1200.webp'))}
         sizes="(min-width: 768px) 42rem, 100vw"
         alt="XL Hybrids conversion overview"
         className="mt-12 w-full rounded-2xl border border-[var(--line)] bg-white"

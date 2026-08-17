@@ -8,19 +8,31 @@ import { getPrerenderData } from '@/lib/prerenderData'
 
 export default function BlogPost() {
   const { slug = '' } = useParams()
-  // Populated during the build-time prerender; empty in the browser, where the
-  // effect below fetches as usual.
+  // Baked in by the build-time prerender and handed to the browser through
+  // window.__PRERENDER__, so this is populated in both.
   const prerendered = getPrerenderData().post
-  const [post, setPost] = useState<Post | null>(prerendered ?? null)
+  // Only the post this route asked for. Navigating from one post to another
+  // keeps the component mounted, and the seeded post belongs to whichever URL
+  // was loaded first.
+  const seeded = prerendered?.slug === slug ? prerendered : null
+  const [post, setPost] = useState<Post | null>(seeded)
   const [status, setStatus] = useState<'loading' | 'ready' | 'missing' | 'error'>(
-    prerendered ? 'ready' : 'loading',
+    seeded ? 'ready' : 'loading',
   )
 
   usePageMeta(post?.title ?? 'Blog', post?.excerpt)
 
   useEffect(() => {
     let active = true
-    setStatus('loading')
+    const cached = prerendered?.slug === slug ? prerendered : null
+
+    // Still refetch when seeded — the post is edited on WordPress, not here, so
+    // a deploy-time copy goes stale on its own. What changes is that the reader
+    // keeps looking at the copy we have while that happens, instead of watching
+    // it blank out to a skeleton.
+    setPost(cached)
+    setStatus(cached ? 'ready' : 'loading')
+
     fetchPost(slug)
       .then((data) => {
         if (!active) return
@@ -31,11 +43,13 @@ export default function BlogPost() {
         setPost(data)
         setStatus('ready')
       })
-      .catch(() => active && setStatus('error'))
+      // A failed revalidation of a post we already have is not worth replacing
+      // that post with an error panel.
+      .catch(() => active && !cached && setStatus('error'))
     return () => {
       active = false
     }
-  }, [slug])
+  }, [slug, prerendered])
 
   return (
     <Section>
@@ -88,11 +102,16 @@ export default function BlogPost() {
                 {post.title}
               </h1>
 
+              {/* The featured image is a WordPress URL with no dimensions
+                  attached, so there's nothing to hand the browser the way
+                  `imageSize` does elsewhere. A fixed ratio reserves the space
+                  instead — the image is decorative here, and cropping it beats
+                  reflowing the article body around it once it lands. */}
               {post.image && (
                 <img
                   src={post.image}
                   alt=""
-                  className="mt-10 w-full rounded-3xl border border-[var(--line)] object-cover"
+                  className="mt-10 aspect-16/9 w-full rounded-3xl border border-[var(--line)] object-cover"
                 />
               )}
 

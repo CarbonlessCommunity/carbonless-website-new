@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import type { ReactNode } from 'react'
 import { Container, Eyebrow } from './ui'
 
@@ -39,6 +40,7 @@ export default function PageHeader({
             <div className="relative">
               <img
                 src={image}
+                {...imageSize(image)}
                 alt=""
                 className="w-full rounded-3xl border border-[var(--line)] bg-white object-contain p-6 shadow-lg shadow-forest-950/5"
               />

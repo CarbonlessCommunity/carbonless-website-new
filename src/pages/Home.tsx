@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import { asset } from '@/lib/asset'
 import { Link } from 'react-router'
 import StatsStrip from '@/components/StatsStrip'
@@ -37,6 +38,7 @@ function Hero() {
         <img
           src={stills.hero.image}
           srcSet={srcSet(stills.hero)}
+          {...imageSize(stills.hero.image)}
           sizes="100vw"
           alt=""
           className="h-full w-full object-cover opacity-55"
@@ -284,6 +286,7 @@ export default function Home() {
               <img
                 src={asset('/images/seals-1200.webp')}
                 srcSet={`${asset('/images/seals-600.webp')} 600w, ${asset('/images/seals-1200.webp')} 1200w`}
+                {...imageSize(asset('/images/seals-1200.webp'))}
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 alt="Seals resting on a shoreline"
                 className="w-full rounded-3xl object-cover shadow-xl shadow-forest-950/10"

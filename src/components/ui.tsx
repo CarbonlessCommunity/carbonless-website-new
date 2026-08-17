@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import type { CSSProperties, ReactNode } from 'react'
 import { Link } from 'react-router'
 
@@ -112,7 +113,13 @@ export function LogoPlate({
       )}
     >
       {src ? (
-        <img src={src} alt="" className="max-h-10 max-w-[9rem] object-contain" loading="lazy" />
+        <img
+          src={src}
+          {...imageSize(src)}
+          alt=""
+          className="max-h-10 max-w-[9rem] object-contain"
+          loading="lazy"
+        />
       ) : (
         <span
           aria-hidden="true"

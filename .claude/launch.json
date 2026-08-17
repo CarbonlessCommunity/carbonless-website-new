@@ -6,6 +6,13 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 5173
+    },
+    {
+      "//": "Serves dist/ — the only way to exercise the prerendered HTML, the per-page head tags and the window.__PRERENDER__ seed, none of which the dev server produces. Run `npm run build` first.",
+      "name": "carbonless-preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview", "--", "--port", "4173"],
+      "port": 4173
     }
   ]
 }

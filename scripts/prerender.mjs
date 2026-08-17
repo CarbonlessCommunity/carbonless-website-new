@@ -101,7 +101,8 @@ const escapeAttr = (value) =>
   String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
 /**
- * Serializes a JSON-LD node for embedding in a <script> tag.
+ * Serializes a value for embedding in a <script> tag — both the JSON-LD nodes
+ * and the blog payload handed to the client.
  *
  * Deliberately NOT escapeAttr: inside a script element the parser is looking for
  * the literal `</script`, so `<` and `&` are the characters that matter and HTML
@@ -118,7 +119,16 @@ const titleByPath = new Map(routes.map((r) => [r.path, r.title]))
  * Everything else in <head> — stylesheet links, the theme script, fonts — is
  * left exactly as Vite emitted it.
  */
-function buildPage({ path: routePath, title, description, markup, draft = false, schemas = [] }) {
+function buildPage({
+  path: routePath,
+  title,
+  description,
+  markup,
+  draft = false,
+  schemas = [],
+  image = ogImage,
+  prerenderData = null,
+}) {
   // The home page keeps the marketing title from index.html; every other page
   // gets the same "<page> — Carbonless Community" shape `usePageMeta` produces.
   const fullTitle =
@@ -147,13 +157,23 @@ function buildPage({ path: routePath, title, description, markup, draft = false,
     // isn't serving the site.
     .replace(
       /<meta\s+property="og:image"[^>]*\/>/,
-      `<meta property="og:image" content="${escapeAttr(ogImage)}" />`,
+      `<meta property="og:image" content="${escapeAttr(image)}" />`,
+    )
+    // The shell declares the share card's 1200x630, which is right for the
+    // default image and wrong for a post's own. Drop the dimensions when the
+    // image isn't that file — every consumer falls back to reading the real
+    // ones, where a stated size that doesn't match crops the preview.
+    .replace(
+      /\s*<meta property="og:image:width"[^>]*\/>\s*<meta property="og:image:height"[^>]*\/>/,
+      image === ogImage
+        ? '\n    <meta property="og:image:width" content="1200" />\n    <meta property="og:image:height" content="630" />'
+        : '',
     )
     .replace(
       '</head>',
       `  <link rel="canonical" href="${escapeAttr(canonical)}" />\n` +
         `    <meta property="og:url" content="${escapeAttr(canonical)}" />\n` +
-        `    <meta name="twitter:image" content="${escapeAttr(ogImage)}" />\n` +
+        `    <meta name="twitter:image" content="${escapeAttr(image)}" />\n` +
         (draft ? `    <meta name="robots" content="noindex, follow" />\n` : '') +
         schemas
           .filter(Boolean)
@@ -161,7 +181,19 @@ function buildPage({ path: routePath, title, description, markup, draft = false,
           .join('') +
         `  </head>`,
     )
-    .replace('<div id="root"></div>', `<div id="root">${markup}</div>`)
+    .replace(
+      '<div id="root"></div>',
+      `<div id="root">${markup}</div>` +
+        // Seeds lib/prerenderData.ts in the browser. The client mounts with
+        // createRoot, so React re-renders from state and ignores the markup
+        // above — without this the blog replaced a rendered post with a
+        // skeleton on every load, then fetched back what it had just thrown
+        // away. An inline classic script runs at parse time, well before the
+        // deferred module bundle reads it.
+        (prerenderData
+          ? `\n    <script>window.__PRERENDER__=${jsonLd(prerenderData)}</script>`
+          : ''),
+    )
 }
 
 async function writePage(routePath, html) {
@@ -217,6 +249,7 @@ if (posts.length) {
       description: 'Information on all sides of the energy and environment discussions.',
       markup,
       schemas: [orgSchema],
+      prerenderData: { posts },
     }))
   } catch (error) {
     failures.push(`/blog: ${error.message}`)
@@ -231,6 +264,11 @@ if (posts.length) {
         title: post.title,
         description: post.excerpt?.slice(0, 200) || 'A post from the Carbonless Community blog.',
         markup,
+        // A post's own featured image is what makes a shared link worth
+        // clicking; the generic card says nothing about the post. Falls back to
+        // that card for the posts that have no featured image.
+        image: post.image || ogImage,
+        prerenderData: { post },
         schemas: [
           orgSchema,
           blogPostingSchema(SITE_URL, post),

@@ -1,14 +1,18 @@
 {
+  /* The suite runs in Node (see `test.environment` in vite.config.ts) while the
+     app it imports is browser code, so this project is the app's settings plus
+     Node's globals. It exists as a third project rather than widening
+     tsconfig.app.json because that would let application code reach for `fs` or
+     `Buffer` and still typecheck, which it cannot do in a browser. */
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
     "target": "es2023",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "esnext",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vite/client"],
-    "allowArbitraryExtensions": true,
+    "types": ["node", "vite/client"],
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -27,8 +31,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  /* Tests and their setup are typechecked by tsconfig.test.json, which is the
-     same settings plus Node's globals. */
-  "include": ["src"],
-  "exclude": ["src/**/*.test.ts", "src/lib/test-setup.ts"]
+  "include": ["src/**/*.test.ts", "src/lib/test-setup.ts"]
 }

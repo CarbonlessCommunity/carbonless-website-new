@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import { useState } from 'react'
 import { Link } from 'react-router'
 import PageHeader from '@/components/PageHeader'
@@ -11,6 +12,7 @@ function PersonCard({ person }: { person: Person }) {
       <div className="aspect-4/3 overflow-hidden bg-[var(--surface-alt)]">
         <img
           src={person.image}
+          {...imageSize(person.image)}
           alt={person.name}
           className="h-full w-full object-cover object-top transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-105"
           loading="lazy"

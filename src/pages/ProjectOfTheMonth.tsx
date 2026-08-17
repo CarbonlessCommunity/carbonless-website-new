@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import { Link } from 'react-router'
 import PageHeader from '@/components/PageHeader'
 import SubscribeForm from '@/components/SubscribeForm'
@@ -92,6 +93,7 @@ export default function ProjectOfTheMonth() {
                 {currentProject.image && (
                   <img
                     src={currentProject.image}
+                    {...imageSize(currentProject.image)}
                     alt=""
                     className="w-full rounded-2xl object-cover"
                     loading="lazy"

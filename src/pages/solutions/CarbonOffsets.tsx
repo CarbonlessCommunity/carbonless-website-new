@@ -1,4 +1,5 @@
 import { Link } from 'react-router'
+import { imageSize } from '@/lib/imageSize'
 import SolutionPage from '@/components/SolutionPage'
 import { Arrow, Quote } from '@/components/ui'
 import { vettingCriteria } from '@/data/offsets'
@@ -123,6 +124,7 @@ export default function CarbonOffsets() {
             >
               <img
                 src={project.image}
+                {...imageSize(project.image)}
                 alt={`UCapture project: ${project.name}`}
                 className="w-full object-cover transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-105"
                 loading="lazy"

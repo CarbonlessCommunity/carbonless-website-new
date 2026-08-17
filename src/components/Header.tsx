@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import { asset } from '@/lib/asset'
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
@@ -113,7 +114,12 @@ export default function Header() {
       <Container size="wide">
         <div className="flex h-18 items-center justify-between gap-4 py-3">
           <Link to="/" className="group flex items-center gap-2.5">
-            <img src={asset('/images/Logo.webp')} alt="" className="h-9 w-9 object-contain" />
+            <img
+              src={asset('/images/Logo.webp')}
+              {...imageSize(asset('/images/Logo.webp'))}
+              alt=""
+              className="h-9 w-9 object-contain"
+            />
             <span
               className={cx(
                 'font-display text-[1.05rem] leading-tight font-semibold tracking-tight',

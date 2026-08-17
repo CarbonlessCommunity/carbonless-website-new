@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import { asset } from '@/lib/asset'
 import SolutionPage from '@/components/SolutionPage'
 
@@ -34,6 +35,7 @@ export default function ReverseAuction() {
       <figure className="mt-12">
         <img
           src={asset('/images/auction.webp')}
+          {...imageSize(asset('/images/auction.webp'))}
           alt="Screenshot of the auction results view a client sees at the conclusion of an auction"
           className="w-full rounded-2xl border border-[var(--line)] bg-white"
           loading="lazy"

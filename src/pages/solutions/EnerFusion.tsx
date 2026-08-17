@@ -1,3 +1,4 @@
+import { imageSize } from '@/lib/imageSize'
 import { asset } from '@/lib/asset'
 import SolutionPage from '@/components/SolutionPage'
 
@@ -33,6 +34,7 @@ export default function EnerFusion() {
 
       <img
         src={asset('/images/orion.webp')}
+        {...imageSize(asset('/images/orion.webp'))}
         alt="An EnerFusion solar PV charging table"
         className="mt-12 w-full rounded-2xl border border-[var(--line)] object-cover"
         loading="lazy"
